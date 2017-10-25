@@ -1,6 +1,6 @@
 
 public class Host {
 
-	// Brendon was heres
+	// Brendon was here twice
 	
 }
