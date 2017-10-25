@@ -40,4 +40,47 @@ It also provides simple keyword search and returns the description of the remote
 keyword search, the server performs the search in the “files” table and returns the resource location of the
 remote files. The resource location includes the remote hostname, port number, remote file name, and the
 connection speed (the host name and connection speed is retrieved from the corresponding entry in the
-“users” table). The server allows multiple clients to register and upload their descriptions at the same time. It also allows multiple hosts to query for files at the same time. It tracks the availability of the remote resources too. If a host “unregistered” from the system, the associated file descriptions and user information are deleted from the system. A screen capture of the required server side of the application is given in Figure 2. 
+“users” table). The server allows multiple clients to register and upload their descriptions at the same time. It also allows multiple hosts to query for files at the same time. It tracks the availability of the remote resources too. If a host “unregistered” from the system, the associated file descriptions and user information are deleted from the system. A screen capture of the required server side of the application is given in Figure 2.
+
+## Notes for Development
+
+Big thanks to Javier for writing this up!
+
+### Work-Flow of Server-Host Connection
+
+1. Host-A connects to "Centralized Server" (CS) and simultaneously uploads files to share and their associated descriptions.
+2. CS sends ack-message to Host-A.
+3. Host-A sends a keyword to search CS's available files.
+4. CS replies to Host-A with a list of the files that match the keyword search and who (which host) has them.
+5. After deciding what file it wants, the *client* in Host-A requests the file to the *server* in Host-B.
+6. Host-B sends the file to the *client* in Host-A.
+
+### Centralized-Server
+
+- Multithread, to allow clients to register and upload their description at the same time.
+- Keeps track of all the available files and who has them in real-time. If a host disconnects, then it doesn't show its files.
+- Provides simple keywords search, returning a list of files and their information.
+
+**Structure and Methods**
+
+**Main()** : This listens for new connections from hosts on a ServerSocket, then sends the new hosts to clientHandler(), creating a new thread.
+
+**clientHandler()** : 
+- Creates a new thread for the new client (host).
+- It receives the file descriptions from the host and stores them in a two-dimensional array, stored in the Centralized-Server class. We can use a function storeInfo() to do this.
+- It will listen for a keyword search request from the host.
+- When it receives it, it will scan the two-dimensional array and will return a list of the matching files to the host.
+
+### Host Requirements
+
+**Client:**
+
+- Initially connects to Centralized-Server and sends file descriptions.
+- Can request keyword searches to the CS
+- Once it obtains the results from the search it can *retreive* a file from another host.
+
+**Server:**
+
+- Listens for file requests.
+- When a file is requested, it sends the file over a TCP connection.
+
