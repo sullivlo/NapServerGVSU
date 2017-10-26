@@ -2,9 +2,18 @@
 
 ## Abstract
 
-Implements a central server that connect multiple hosts and share files among hosts.
+This system implements a "Central Server" that connects multiple peers to share files among one another. It serves to list the available files to the connected users as well as to handle the file transfer with the peer that has the desired file.
+
+## Authors
+
+- Louis Sullivan
+- Javier Ramirez-Moyano
+- Matthew Schuck
+- Brendon Murthum
 
 ## Assignment Information
+
+*This information directly from the intial assignment document.*
 
 #### Introduction
 
@@ -46,9 +55,9 @@ connection speed (the host name and connection speed is retrieved from the corre
 
 ## Notes for Developers
 
-Big thanks to Javier for writing this up!
+*Big thanks to Javier for writing this up!*
 
-#### Work-Flow of Server-Host Connection
+### Work-Flow of Server-Host Connection
 
 1. Host-A connects to "Centralized Server" (CS) and simultaneously uploads files to share and their associated descriptions.
 2. CS sends ack-message to Host-A.
@@ -57,25 +66,26 @@ Big thanks to Javier for writing this up!
 5. After deciding what file it wants, the *client* in Host-A requests the file to the *server* in Host-B.
 6. Host-B sends the file to the *client* in Host-A.
 
-#### Centralized-Server
+### Centralized-Server
 
 - Multithread, to allow clients to register and upload their description at the same time.
 - Keeps track of all the available files and who has them in real-time. If a host disconnects, then it doesn't show its files.
 - Provides simple keywords search, returning a list of files and their information.
 
-**Structure and Methods**
+#### Structure and Methods
 
-__Main()__ : This listens for new connections from hosts on a ServerSocket, then sends the new hosts to clientHandler(), creating a new thread.
+`Main()`
+- This listens for new connections from hosts on a ServerSocket, then sends the new hosts to clientHandler(), creating a new thread.
 
-__clientHandler() class__ : 
+`clientHandler() class` 
 - Creates a new thread for the new client (host).
 - It receives the file descriptions from the host and stores them in a two-dimensional array, stored in the Centralized-Server class. We can use a function storeInfo() to do this.
 - It will listen for a keyword search request from the host.
 - When it receives it, it will scan the two-dimensional array and will return a list of the matching files to the host.
 
-#### Host
+### Host
 
-**Requirements**
+#### Requirements
 
 __Client:__
 
@@ -88,23 +98,24 @@ __Server:__
 - Listens for file requests.
 - When a file is requested, it sends the file over a TCP connection.
 
-**Strucure and Methods**
+#### Strucure and Methods
 
-__GUI class:__ - picture in assignment PDF
+`GUI class`
+- picture in assignment PDF
 
-__onConnect()__ 
+`onConnect()` 
 - Activated from the GUI.
 - Connects to the Centralized Server using the info provided by the user on the GUI.
 - Sends file descriptions to the Centralized Server.
 
-__keywordSearch()__
+`keywordSearch()`
 - Activated from the GUI.
 - Sends a ketword search request along with the keyword(s).
 - Once it receives an answer, it displays the different files.
 
-__requestFile()__
+`requestFile()`
 - Once the user decides what files he/she wants, this method will send a transfer request to the *server of the host* that has such file and it will download it.
 
-__quit()__
+`quit()`
 - This stops the connection and shuts the whole host
 
