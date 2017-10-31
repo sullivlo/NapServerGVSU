@@ -186,3 +186,4 @@ public class GUI {
 		frame.getContentPane().add(lblFtp);
 	}
 }
+
