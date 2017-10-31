@@ -1,0 +1,58 @@
+<All_Files>
+
+    <File id="0001">    
+        <DisplayName> Sword Coast Adventurer's Guide - 5e </DisplayName>
+        <FileName> sword_coast_adventurers_guide_5e.pdf </FileName>
+        <Keywords>
+            <Key> Dungeons and Dragons </Key>
+            <Key> PDF </Key>
+            <Key> Rulebooks </Key>
+            <Key> 5e </Key>
+        </Keywords>
+    </File>
+
+    <File id="0002">
+        <DisplayName> Dungeon Master's Guide - 5e </DisplayName>
+        <FileName> dungeon_masters_guide_5e.pdf </FileName>
+        <Keywords>
+            <Key> Dungeons and Dragons </Key>
+            <Key> PDF </Key>
+            <Key> Rulebooks </Key>
+            <Key> 5e </Key>
+        </Keywords>
+    </File>
+
+    <File id="0003">
+        <DisplayName> Monster Manual - 5e </DisplayName>
+        <FileName> monster_manual_5e.pdf </FileName>
+        <Keywords>
+            <Key> Dungeons and Dragons </Key>
+            <Key> PDF </Key>
+            <Key> Rulebooks </Key>
+            <Key> 5e </Key>
+        </Keywords>
+    </File>
+    
+    <File id="0004">
+        <DisplayName> Player's Handbook - 5e </DisplayName>
+        <FileName> players_handbook_dnd_5e.pdf </FileName>
+        <Keywords>
+            <Key> Dungeons and Dragons </Key>
+            <Key> PDF </Key>
+            <Key> Rulebooks </Key>
+            <Key> 5e </Key>
+        </Keywords>
+    </File>
+    
+    <File id="0005">
+        <DisplayName> Character Sheet - 5e </DisplayName>
+        <FileName> character_sheet_5e.pdf </FileName>
+        <Keywords>
+            <Key> Dungeons and Dragons </Key>
+            <Key> PDF </Key>
+            <Key> Rulebooks </Key>
+            <Key> 5e </Key>
+        </Keywords>
+    </File>
+
+</All_Files>
