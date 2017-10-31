@@ -68,6 +68,8 @@ connection speed (the host name and connection speed is retrieved from the corre
 
 ### Centralized-Server
 
+__Requirements:__
+
 - Multithread, to allow clients to register and upload their description at the same time.
 - Keeps track of all the available files and who has them in real-time. If a host disconnects, then it doesn't show its files.
 - Provides simple keywords search, returning a list of files and their information.
@@ -85,15 +87,13 @@ connection speed (the host name and connection speed is retrieved from the corre
 
 ### Host
 
-#### Requirements
-
-__Client:__
+__Client Requirements:__
 
 - Initially connects to Centralized-Server and sends file descriptions.
 - Can request keyword searches to the CS
 - Once it obtains the results from the search it can *retreive* a file from another host.
 
-__Server:__
+__Server Requirements:__
 
 - Listens for file requests.
 - When a file is requested, it sends the file over a TCP connection.
@@ -119,3 +119,9 @@ __Server:__
 `quit()`
 - This stops the connection and shuts the whole host
 
+## Development Updates
+
+#### October 31, 2017
+
+- Javier and Louis added initial GUI implementation
+- Brendon and Matthew added sample client files (XML, images, PDFs) for testing
