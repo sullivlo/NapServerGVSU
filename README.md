@@ -125,3 +125,4 @@ __Server Requirements:__
 
 - Javier and Louis added initial GUI implementation
 - Brendon and Matthew added sample client files (XML, images, PDFs) for testing
+- Brendon and Louis added UPDATE command that would execute in initial connection and upon other updates
