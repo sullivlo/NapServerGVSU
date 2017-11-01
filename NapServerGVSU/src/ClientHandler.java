@@ -18,6 +18,10 @@ public class ClientHandler extends Thread{
     /** This is used to grab bytes over the data-line */
     private String recvMsg;
     
+    /** This contains objects of all the hosted files */
+    /* THIS SHOULD BE GLOBAL TO THE ENTIRE SERVER */
+    private ArrayList<FileContainer> AllFiles;
+      
 	/*******************************************************************
     *
     * Beginning of thread.
@@ -74,6 +78,13 @@ public class ClientHandler extends Thread{
              String currentToken;
              StringTokenizer tokens = new StringTokenizer(recvMsg);
             
+             String clientDataPort = tokens.nextToken();
+             
+             /* Client command, "LIST," or another. */
+             String commandFromClient = tokens.nextToken();
+             
+             String key, fileName, keyWords; 
+             
              /* While checks for more user input in the token */
              while (tokens.hasMoreTokens()) {
             	 
@@ -82,10 +93,7 @@ public class ClientHandler extends Thread{
             	 /* NOTE - This "clientDataPort" may be changed later. It was added to
             	  * have continuity with the FTP-server that we developed. Oct 25.
             	  */
-                 String clientDataPort = tokens.nextToken();
                  
-                 /* Client command, "LIST," or another. */
-                 String commandFromClient = tokens.nextToken();
                  
                  /* This command closes this client-thread */
 	             if(commandFromClient.equals("QUIT")){
@@ -96,8 +104,42 @@ public class ClientHandler extends Thread{
 	             }
 	             /* This commands initiates the keyword-search */
 	             else if(commandFromClient.equals("KEYWORD")){
+	            	 
+	            	 
 	            	 System.out.println("COMMAND: KEYWORD from user");
+	            	 /*Passes the last arguement into the key */
+	            	 key = tokens.nextToken();
+	            	 System.out.println("Key " + key);
+	            	 
 	             }
+	             /* This command updates the files the host have in their root directory */ 
+	             else if(commandFromClient.equals("UPDATE")){
+	            	 
+	            	 
+	            	 System.out.println("COMMAND: Update from user");
+	            	 /*Passes the last arguement into the key */
+	            	 
+	            	 fileName = tokens.nextToken();
+	            	 
+	            	 System.out.println("File Name: " + fileName);
+	            	 
+	            	 keyWords = tokens.nextToken(); 
+	            	 
+	            	 System.out.println("keyWords " + keyWords);
+	            	 
+	            	 /* Set up one "File" object to be updated on server */
+	            	 FileContainer tempContainer = new FileContainer();
+	            	 tempContainer.setFileName(fileName);
+	            	 tempContainer.setHostIP("TEMP");
+	            	 tempContainer.setSpeed("TEMP");
+	            	 tempContainer.setKeyString("TEMP");
+	            	 
+	            	 /* Adds this object to the general list of hosted files */
+	            	 AllFiles.add(tempContainer);
+	            	 
+	            	 
+	             }
+	             
 	         }
                 
         /* End of the other while loop */
