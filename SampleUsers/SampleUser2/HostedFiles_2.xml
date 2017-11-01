@@ -1,80 +1,63 @@
 <All_Files>
 
     <File id="0001">    
-        <DisplayName> Top Gun </DisplayName>
-        <FileName> top_gun_720p_1986.mp4 </FileName>
+        <DisplayName> Child Playing With Toy Stock Image </DisplayName>
+        <FileName> car-toy-childhood-child-163768.jpeg </FileName>
         <Keywords>
-            <Key> Movie </Key>
-            <Key> Action </Key>
-            <Key> Drama </Key>
-            <Key> Romance </Key>
-            <Key> Airplane </Key>
-            <Key> Tom Cruise </Key>
-            <Key> Danger Zone </Key>
-            <Key> Military </Key>
-            <Key> 1986 </Key>
-            <Key> 720p </Key>
+            <Key> Image </Key>
+            <Key> jpeg </Key>
+            <Key> Stock Image </Key>
+            <Key> Child </Key>
+            <Key> Toy </Key>
         </Keywords>
     </File>
 
     <File id="0002">
-        <DisplayName> The Mummy </DisplayName>
-        <FileName> the_mummy_4k_2017.mp4 </FileName>
+        <DisplayName> Toy Tractor Stock Image </DisplayName>
+        <FileName> pexels-photo-131777.jpeg </FileName>
         <Keywords>
-            <Key> Movie </Key>
-            <Key> Fantasy </Key>
-            <Key> Action </Key>
-            <Key> Adventure </Key>
-            <Key> 2017 </Key>
-            <Key> Alex Kurtzman </Key>
-            <Key> Tom Cruise </Key>
-            <Key> Russell Crowe </Key>
-            <Key> 4k </Key>
+            <Key> Image </Key>
+            <Key> jpeg </Key>
+            <Key> Stock Image </Key>
+            <Key> Tractor </Key>
+            <Key> Red </Key>
+            <Key> Toy </Key>
         </Keywords>
     </File>
 
     <File id="0003">
-        <DisplayName> Quarterly Progress Report - Summer 2016 </DisplayName>
-        <FileName> quarterly_progress_su_2016.pdf </FileName>
+        <DisplayName> Child Coloring Stock Image </DisplayName>
+        <FileName> pexels-photo-207653.jpeg </FileName>
         <Keywords>
-            <Key> Report </Key>
-            <Key> Quarterly </Key>
-            <Key> 2016 </Key>
-            <Key> PDF </Key>
-            <Key> Progress Report </Key>
-            <Key> Documents </Key>
+            <Key> Image </Key>
+            <Key> jpeg </Key>
+            <Key> Stock Image </Key>
+            <Key> Child </Key>
+            <Key> Coloring </Key>
         </Keywords>
     </File>
     
     <File id="0004">
-        <DisplayName> War of the Worlds </DisplayName>
-        <FileName> war_of_worlds_1080p_2005.mp4 </FileName>
+        <DisplayName> Christmas Decoration Stock Image </DisplayName>
+        <FileName> pexels-photo-225251.jpeg </FileName>
         <Keywords>
-            <Key> Movie </Key>
-            <Key> Sci-Fi </Key>
-            <Key> Thriller </Key>
-            <Key> Adventure </Key>
-            <Key> Steven Spielberg </Key>
-            <Key> Dakota Fanning </Key>
-            <Key> Tom Cruise </Key>
-            <Key> 1080p <Key>
-            <Key> 2005 <Key>
+            <Key> Image </Key>
+            <Key> jpeg </Key>
+            <Key> Stock Image </Key>
+            <Key> Christmas </Key>
+            <Key> Red </Key>
         </Keywords>
     </File>
     
     <File id="0005">
-        <DisplayName> Minority Report </DisplayName>
-        <FileName> minority_report_480p_2002.mp4 </FileName>
+        <DisplayName> Child Coloring Stock Image </DisplayName>
+        <FileName> pexels-photo-256468.jpeg </FileName>
         <Keywords>
-            <Key> Movie </Key>
-            <Key> Crime </Key>
-            <Key> Action </Key>
-            <Key> Adventure </Key>
-            <Key> Steven Spielberg </Key>
-            <Key> Neal McDonough </Key>
-            <Key> Tom Cruise </Key>
-            <Key> 480p <Key>
-            <Key> 2002 <Key>
+            <Key> Image </Key>
+            <Key> jpeg </Key>
+            <Key> Stock Image </Key>
+            <Key> Coloring </Key>
+            <Key> Child </Key>
         </Keywords>
     </File>
 
