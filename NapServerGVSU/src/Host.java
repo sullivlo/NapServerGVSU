@@ -6,39 +6,64 @@ import java.awt.*;
 public class Host {
 	
 	static Socket server;
-	static String tmpServerIp = 	"127.0.0.1";
-	static String tmpServerPort = 	"1234";
+	
+	private String serverHostname;
+	private String port;
+	private String username;
+	private String hostname;
+	
+	/* For reading text from the user */
+    private Scanner input = new Scanner(System.in);
+    
+    /* This socket handles communicating main commands to server */
+    private Socket controlSocket = null;
+    
+    /* QUIT controls the loop that listens for new command */
+    private boolean quit = false;
+    
+    /* Checks for the user being already connected */
+    private boolean isConnected = false;
+    
+    /* This value handles the file transfer */
+    private int recvMsgSize; 
+
+    /* This value holds the single string of the command */
+    private String userCommand;
+    
+    /* This handles the control-line out stream */
+    private PrintWriter outToServer_Control = null;
+    
+    /* This handles the control-line in stream */
+    private Scanner inFromServer_Control = null;
 	
 	@SuppressWarnings("resource")
-    public static void main(String[] args) throws Exception {
-		/* For reading text from the user */
-	    Scanner input = new Scanner(System.in);
-	    
-	    /* This socket handles communicating main commands to server */
-	    Socket controlSocket = null;
-	    
-	    /* QUIT controls the loop that listens for new command */
-	    boolean quit = false;
-	    
-	    /* Checks for the user being already connected */
-	    boolean isConnected = false;
-	    
-	    /* This value handles the file transfer */
-	    int recvMsgSize; 
+    public static void main(String[] args) throws Exception {}
 	
-	    /* This value holds the single string of the command */
-	    String userCommand;
+	/**
+	 * This function is called from the GUI. It connects the host to the central server
+	 * using the parameters that the user inputs through the graphic user interface
+	 * 
+	 * @param serverHostname
+	 * @param port
+	 * @param username
+	 * @param hostname
+	 */
+	public void connectToServer(String serverHostname, String port, String username, String hostname) {
+		
+		/* Taking the parameters from the GUI */
+		this.serverHostname = serverHostname;
+		this.port = port;
+		this.username = username;
+		this.hostname = hostname;
 	    
-	    /* This handles the control-line out stream */
-	    PrintWriter outToServer_Control = null;
-	    
-	    /* This handles the control-line in stream */
-	    Scanner inFromServer_Control = null;
-	   
-	    
+	    /* Establish a TCP connection with the server using the parameters
+	     * obtained from the user through the User Interface
+	     */
 	    try {
-	        controlSocket = new Socket(tmpServerIp, 
-	                             Integer.parseInt(tmpServerPort));
+	        controlSocket = new Socket(serverHostname, 
+	                             Integer.parseInt(port));
+	        
+	        // What is the variable for ?? 
 	        boolean controlSocketOpen = true;
 	    }catch(Exception p){
 	        System.out.println("ERROR: Did not find socket!");
@@ -61,7 +86,34 @@ public class Host {
 	        isConnected = false;
 	    }
 	    
-	    /* This loop to keep taking commands */
+	    /*
+	     * If the connection has been set up correctly, then call the methods
+	     * sendDescriptions() and controllingFunction(), in order to send the 
+	     * descriptions over to the central server and to listen for user
+	     * commands
+	     */
+	    if(isConnected) {
+	    	sendDescriptions();
+	    	controllingFunction();
+	    }
+	    
+	/* End of connectToServer() */
+	}
+	
+	/**
+	 * This method sends the description of its own files to the central server. 
+	 * These descriptions are obtained by scanning an XML file, which is unique 
+	 * to each host and describes the files that it contains
+	 */
+	private void sendDescriptions() {
+		
+	}
+	
+	/**
+	 * This method listens for commands and handles them when it receives them
+	 */
+	private void controllingFunction() {
+		/* This loop to keep taking commands */
 	    while (!quit) {
 	        /* Menu sent to the user before every command */
 	        System.out.println("");
@@ -91,7 +143,7 @@ public class Host {
 	        else if (userCommand.equals("QUIT") && isConnected == true) {
 	            
 	            /* Tells the server that this client wants disconnect */
-	            String toSend = tmpServerPort + " " + "QUIT";
+	            String toSend = port + " " + "QUIT";
 	            outToServer_Control.println(toSend);
 	            outToServer_Control.flush();
 	            /* Tells the client to stop itself */
@@ -106,6 +158,7 @@ public class Host {
 	        } else if (userCommand.contains("KEYWORD") 
 	                && isConnected == true) {  
 	        	
+	        	/*Pass the argument into the keyword */
 	        	String keyword;
 	            try {
 	            	keyword = tokens.nextToken();
@@ -116,7 +169,7 @@ public class Host {
 	            }
 	            try {
 	                /* Send the request over the control line */
-	                String toSend = tmpServerPort + " " + "KEYWORD" + " " + 
+	                String toSend = port + " " + "KEYWORD" + " " + 
 	                    keyword;
 	                outToServer_Control.println(toSend);
 	                outToServer_Control.flush();
@@ -126,12 +179,10 @@ public class Host {
 	                continue;
 	            }
 	        }
-    	
         /* End of controlling while */
 	    }
-
-	/* End of Main() */
 	}
-
 /* End of FTP client */
+
 }
+
