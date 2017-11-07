@@ -30,6 +30,7 @@ public class GUI {
 	private JTextField textFieldPort;
 	private JTextField textField_4;
 	private JTextField textField_5;
+	private JComboBox comboBoxSpeed;
 	
 	private Host host = new Host();
 	
@@ -102,11 +103,18 @@ public class GUI {
 			public void actionPerformed(ActionEvent e) {
 			
 				String serverHostname = textFieldServerHostname.getText();
-				String username = textFieldUsername.getText();
-				String port = textFieldPort.getText();
-				String hostname = textFieldHostname.getText();
 				
-				host.connectToServer(serverHostname, port, username, hostname);
+				String username = textFieldUsername.getText(); 
+				username = username.replaceAll(" ", "@@");
+				
+				String port = textFieldPort.getText();
+				
+				String hostname = textFieldHostname.getText();
+				hostname = hostname.replaceAll(" ", "@@");
+				
+				String speed = comboBoxSpeed.getSelectedItem().toString();
+				
+				host.connectToServer(serverHostname, port, username, hostname, speed);
 			}
 		});
 		btnConnect.setFont(new Font("Dialog", Font.BOLD | Font.ITALIC, 12));
@@ -137,7 +145,7 @@ public class GUI {
 		panelConnection.add(textFieldPort);
 		textFieldPort.setColumns(10);
 		
-		JComboBox comboBoxSpeed = new JComboBox();
+		comboBoxSpeed = new JComboBox();
 		comboBoxSpeed.setModel(new DefaultComboBoxModel(new String[] {"Ethernet", "T1"}));
 		comboBoxSpeed.setFont(new Font("Dialog", Font.PLAIN, 12));
 		comboBoxSpeed.setBounds(301, 37, 99, 19);
