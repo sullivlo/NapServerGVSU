@@ -1,54 +1,54 @@
 <All_Files>
 
-    <File id="0001">    
-        <DisplayName> Laptop Stock Image </DisplayName>
-        <FileName> pexels-photo-218863.jpeg </FileName>
+    <File id="0001">  
+        <DisplayName>Laptop-Stock-Image<DisplayName>
+        <FileName>pexels-photo-218863.jpeg<FileName>
         <Keywords>
-            <Key> Image </Key>
-            <Key> Keyboard </Key>
-            <Key> Laptop </Key>
-            <Key> Stock Image </Key>
-            <Key> Mac </Key>
-            <Key> jpeg </Key>
-        </Keywords>
-    </File>
+            <Key>Image<Key>
+            <Key>Keyboard<Key>
+            <Key>Laptop<Key>
+            <Key>Stock-Image<Key>
+            <Key>Mac<Key>
+            <Key>jpeg<Key>
+       <Keywords>
+   <File>
 
     <File id="0002">
-        <DisplayName> Breakfast and Phone </DisplayName>
-        <FileName> pexels-photo-225223.jpeg </FileName>
+        <DisplayName>Breakfast-and-Phone<DisplayName>
+        <FileName>pexels-photo-225223.jpeg<FileName>
         <Keywords>
-            <Key> Image </Key>
-            <Key> Cell Phone </Key>
-            <Key> Breakfast </Key>
-            <Key> Soda </Key>
-            <Key> Stock Image </Key>
-            <Key> jpeg </Key>
-        </Keywords>
-    </File>
+            <Key>Image<Key>
+            <Key>Cell-Phone<Key>
+            <Key>Breakfast<Key>
+            <Key>Soda<Key>
+            <Key>Stock-Image<Key>
+            <Key>jpeg<Key>
+       <Keywords>
+   <File>
 
     <File id="0003">
-        <DisplayName> Laptop Stock Image </DisplayName>
-        <FileName> pexels-photo-225767.jpeg </FileName>
+        <DisplayName>Laptop-Stock-Image<DisplayName>
+        <FileName>pexels-photo-225767.jpeg<FileName>
         <Keywords>
-            <Key> Image </Key>
-            <Key> Laptop </Key>
-            <Key> Keyboard </Key>
-            <Key> Paper </Key>
-            <Key> Pen </Key>
-            <Key> jpeg </Key>
-        </Keywords>
-    </File>
+            <Key>Image<Key>
+            <Key>Laptop<Key>
+            <Key>Keyboard<Key>
+            <Key>Paper<Key>
+            <Key>Pen<Key>
+            <Key>jpeg<Key>
+       <Keywords>
+   <File>
     
     <File id="0004">
-        <DisplayName> Laptop Stock Image </DisplayName>
-        <FileName> pexels-photo-454507.jpeg </FileName>
+        <DisplayName>Laptop-Stock-Image<DisplayName>
+        <FileName>pexels-photo-454507.jpeg<FileName>
         <Keywords>
-            <Key> Image </Key>
-            <Key> Laptop </Key>
-            <Key> Sunglasses </Key>
-            <Key> Keyboard </Key>
-            <Key> jpeg </Key>
-        </Keywords>
-    </File>
+            <Key>Image<Key>
+            <Key>Laptop<Key>
+            <Key>Sunglasses<Key>
+            <Key>Keyboard<Key>
+            <Key>jpeg<Key>
+       <Keywords>
+   <File>
 
 </All_Files>
