@@ -18,6 +18,13 @@ public class ClientHandler extends Thread{
     /** This is used to grab bytes over the data-line */
     private String recvMsg;
     
+    /** This takes the user information from the host     */
+    private String userInformation;
+    private String UserName;
+    private String UserHostName;
+    private  String UserSpeed;
+    
+    
     /** This contains objects of all the hosted files */
     /* THIS SHOULD BE GLOBAL TO THE ENTIRE SERVER */
     private ArrayList<FileContainer> AllFiles;
@@ -58,9 +65,36 @@ public class ClientHandler extends Thread{
    * 
    ******************************************************************/
     public void run(){   
-
+    	
+    	
     	/* Keeps tracks of when to close the thread */
         boolean stayAlive = true;
+        /** Gets user information from the host      */
+        
+        try {
+        	 userInformation = inFromClient.nextLine();
+        	         	 
+        	 StringTokenizer userTokens = new StringTokenizer(userInformation);
+        	
+        	 UserName = userTokens.nextToken();
+        	 UserName = UserName.replaceAll("@@", " ");
+        	 System.out.println("UserName " + UserName);
+        	  
+        	 UserHostName = userTokens.nextToken();
+        	 UserHostName = UserHostName.replaceAll("@@", " ");
+        	 System.out.println("UserHostName " + UserHostName);
+        	  
+        	 UserSpeed = userTokens.nextToken();
+        	 System.out.println("UserSpeed " + UserSpeed); 
+        }
+        
+        catch (Exception e) {
+            /* Host did not supply user information  */
+            System.out.println("");
+            System.out.println("ERROR: Host did not supply user information");
+        }
+        
+        
             
         /* The controlling loop that keeps the user alive */
         while (stayAlive) {
@@ -68,6 +102,7 @@ public class ClientHandler extends Thread{
         	 /* This reads the command from the client */
         	 try {
                  recvMsg = inFromClient.nextLine();
+                 
              } catch (Exception e) {
                  /* Client left early, or otherwise */
                  System.out.println("");
