@@ -2,6 +2,13 @@ import java.net.*;
 import java.util.*;
 import java.io.*; 
 import java.awt.*;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.DocumentBuilder;
+import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
+import org.w3c.dom.Node;
+import org.w3c.dom.Element;
+
 
 public class Host {
 	
@@ -11,178 +18,238 @@ public class Host {
 	private String port;
 	private String username;
 	private String hostname;
+	private String speed;
 	
-	/* For reading text from the user */
-    private Scanner input = new Scanner(System.in);
-    
-    /* This socket handles communicating main commands to server */
-    private Socket controlSocket = null;
-    
-    /* QUIT controls the loop that listens for new command */
-    private boolean quit = false;
-    
-    /* Checks for the user being already connected */
+	/* Checks for the user being already connected */
     private boolean isConnected = false;
-    
-    /* This value handles the file transfer */
-    private int recvMsgSize; 
 
-    /* This value holds the single string of the command */
-    private String userCommand;
-    
-    /* This handles the control-line out stream */
-    private PrintWriter outToServer_Control = null;
-    
-    /* This handles the control-line in stream */
-    private Scanner inFromServer_Control = null;
 	
 	@SuppressWarnings("resource")
     public static void main(String[] args) throws Exception {}
 	
+	
+	
 	/**
-	 * This function is called from the GUI. It connects the host to the central server
-	 * using the parameters that the user inputs through the graphic user interface
 	 * 
 	 * @param serverHostname
 	 * @param port
 	 * @param username
 	 * @param hostname
 	 */
-	public void connectToServer(String serverHostname, String port, String username, String hostname) {
+	public void connectToServer(String serverHostname, String port, String username, String hostname, String speed) {
 		
 		/* Taking the parameters from the GUI */
 		this.serverHostname = serverHostname;
 		this.port = port;
 		this.username = username;
 		this.hostname = hostname;
+		this.speed = speed;
+		
+		/* For reading text from the user */
+	    Scanner input = new Scanner(System.in);
 	    
-	    /* Establish a TCP connection with the server using the parameters
-	     * obtained from the user through the User Interface
+	    /* This socket handles communicating main commands to server */
+	    Socket controlSocket = null;
+	    
+	    /* QUIT controls the loop that listens for new command */
+	    boolean quit = false;
+	    
+	    	    
+	    /* This value handles the file transfer */
+	    int recvMsgSize; 
+	
+	    /* This value holds the single string of the command */
+	    String userCommand;
+	    
+	    /* This handles the control-line out stream */
+	    PrintWriter outToServer_Control = null;
+	    
+	    /* This handles the control-line in stream */
+	    Scanner inFromServer_Control = null;
+	    
+	    /**
+	     * If not connected then connect to central server
 	     */
-	    try {
-	        controlSocket = new Socket(serverHostname, 
-	                             Integer.parseInt(port));
-	        
-	        // What is the variable for ?? 
-	        boolean controlSocketOpen = true;
-	    }catch(Exception p){
-	        System.out.println("ERROR: Did not find socket!");
-	        
-	    }
-	                        
-	    // Set-up the control-stream,
-	    // if there's an error, report the non-connection.
-	    try {
-	        inFromServer_Control = 
-	           new Scanner(controlSocket.getInputStream());
-	        outToServer_Control = 
-	           new PrintWriter(controlSocket.getOutputStream());
-	        isConnected = true;
-	        System.out.println("Connected to server!");
-	    }
-	    catch (Exception e) {
-	        System.out.println("ERROR: Did not connect to " +
-	            "server!");
-	        isConnected = false;
-	    }
 	    
-	    /*
-	     * If the connection has been set up correctly, then call the methods
-	     * sendDescriptions() and controllingFunction(), in order to send the 
-	     * descriptions over to the central server and to listen for user
-	     * commands
+	    /* Only connect if NOT already connected */
+	    if (isConnected == false){
+	    	
+	    	/* 
+	    	 *  Establish a TCP connection with the server using the parameters
+	     	 *  obtained from the user through the User Interface
+	    	 */
+		    try {
+		        controlSocket = new Socket(serverHostname, 
+		                             Integer.parseInt(port));
+		        boolean controlSocketOpen = true;
+		    } catch (Exception p) {
+		        System.out.println("ERROR: Did not find socket!");
+		    }
+		                        
+		    // Set-up the control-stream,
+		    // if there's an error, report the non-connection.
+		    try {
+		        inFromServer_Control = 
+		           new Scanner(controlSocket.getInputStream());
+		        outToServer_Control = 
+		           new PrintWriter(controlSocket.getOutputStream());
+		        isConnected = true;
+		        System.out.println("Connected to server!");
+		    }
+		    catch (Exception e) {
+		        System.out.println("ERROR: Did not connect to " +
+		            "server!");
+		        isConnected = false;
+		    } 
+		    
+		    /* Send userName, HostName, and speed to ClientHandler */
+		    String userInformation = username + " " + hostname + " "+ speed;
+		    outToServer_Control.println(userInformation);
+		    outToServer_Control.flush();
+		    
+		    
+		    /* The following is largely generated by looking to this guide:
+		     * https://www.mkyong.com/java/how-to-read-xml-file-in-java-dom-parser/
+		     */
+		    try {
+		    	/* Prepare the document for XML extraction */
+			    File fXmlFile = new File("HostedFiles.xml");
+			    DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+			    DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+			    Document doc = dBuilder.parse(fXmlFile);
+			    
+				//optional, but recommended
+			    //read this - http://stackoverflow.com/questions/13786607/normalization-in-dom-parsing-with-java-how-does-it-work
+			    doc.getDocumentElement().normalize();
+			   
+			    NodeList nList = doc.getElementsByTagName("File");
+			    
+			    /* For each "object," or, each file-description iterate */
+			    /* Each iteration would send a string to the central-server */
+			    /* TO-DO: (1) Look over this. (2) Implement the server listening for these strings. */
+			    for (int temp = 0; temp < nList.getLength(); temp++) {
+		
+					Node nNode = nList.item(temp);
+							
+					if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+		
+						Element eElement = (Element) nNode;
+		
+						/* NOTE - If later we want to include the display-name of the file */
+						// String DisplayName =  eElement.getElementsByTagName("DisplayName").item(0);
+						
+						String FileName = eElement.getElementsByTagName("FileName").item(0).getTextContent();
+						String KeyWords = "";
+						int tmpLength = eElement.getElementsByTagName("Key").getLength();
+						System.out.println("Number of keys to send over line:" + tmpLength);
+						
+						
+						/* Louise and I weren't sure how we want to implement the following loop */
+						//for(int i = 0; i < tmpLength; i++){
+							KeyWords =  KeyWords + eElement.getElementsByTagName("Keywords").item(0).getTextContent();
+							System.out.println(KeyWords);
+						//}
+							
+						/* Removing added-whitespace. This could be an issue with how we grabbed the items. */
+						KeyWords = KeyWords.replaceAll("\n", "");
+						KeyWords = KeyWords.replaceAll("              ", " ");						
+						KeyWords = KeyWords.substring(1);
+
+						String toSend = FileName + " " + tmpLength + " " + KeyWords;
+						System.out.println("DEBUG: " + toSend);
+						
+						/* TO-DO: Send this line of files and their keys to the server */
+						/* 	      We want to send a string for each file. Each string sent over the control-line
+						 *        representing one file's keys. "toSend" above represents one line to send.
+						 *        
+						 * 		  Example string sent over line:  "myphoto.jpg 3 banana image jpeg"       
+						 */
+					}
+				} 
+			  
+		    }
+		    catch (Exception e) {
+		    	e.printStackTrace();
+		    } 
+	    }
+	    /**
+	     * Ends if statement
 	     */
-	    if(isConnected) {
-	    	sendDescriptions();
-	    	controllingFunction();
-	    }
-	    
+	    /* This loop to keep taking commands */
+////	    while (!quit) {
+////	        /* Menu sent to the user before every command */
+////	        System.out.println("");
+////	        System.out.println("Valid commands:"); 
+////	        System.out.println("QUIT");
+////	        System.out.println("KEYWORD");
+////	        
+////	        /* Take user command */
+////	        userCommand = input.nextLine();
+////	        
+////	        String currentToken;
+////	        /* Break the user command to tokens */
+////	        StringTokenizer tokens = new StringTokenizer(userCommand);
+////	        currentToken = tokens.nextToken();
+////	        String Command = currentToken;
+////	        userCommand = Command.toUpperCase();
+////	        
+////	        System.out.println(" ");
+////	        
+////	        /* Accidental No-Command */
+////	        if (userCommand.equals("")){
+////	            System.out.println("ERROR: No command entered.");
+////	            continue;
+////	        }
+////	        
+////	        /* Quit Command */
+////	        else if (userCommand.equals("QUIT") && isConnected == true) {
+////	            
+////	            /* Tells the server that this client wants disconnect */
+////	            String toSend = port + " " + "QUIT";
+////	            outToServer_Control.println(toSend);
+////	            outToServer_Control.flush();
+////	            /* Tells the client to stop itself */
+////	            quit = true;            
+////	            
+////	        /* Quit Command */
+////	        } else if (userCommand.equals("QUIT") && isConnected == false) {
+////	            /* Tells the client to stop itself */
+////	            quit = true;
+////	            
+////	        /* Keyword Command */
+////	        } else if (userCommand.contains("KEYWORD") 
+////	                && isConnected == true) {  
+////	        	
+////	        	/*Pass the argument into the keyword */
+////	        	String keyword;
+////	            try {
+////	            	keyword = tokens.nextToken();
+////	            } catch (Exception e) {
+////	               System.out.println("ERROR: Did not give arguement " +
+////	                   "to STOR.");
+////	               continue;
+////	            }
+////	            try {
+////	                /* Send the request over the control line */
+////	                String toSend = port + " " + "KEYWORD" + " " + 
+////	                    keyword;
+////	                outToServer_Control.println(toSend);
+////	                outToServer_Control.flush();
+////	            }catch (Exception e) {
+////	            System.out.println("ERROR: Did not give " + 
+////	                    "arguement to KEYWORD.");
+////	                continue;
+////	            }
+////	        }
+//    	
+//        /* End of controlling while */
+//	    }*/
+
 	/* End of connectToServer() */
 	}
-	
-	/**
-	 * This method sends the description of its own files to the central server. 
-	 * These descriptions are obtained by scanning an XML file, which is unique 
-	 * to each host and describes the files that it contains
-	 */
-	private void sendDescriptions() {
-		
-	}
-	
-	/**
-	 * This method listens for commands and handles them when it receives them
-	 */
-	private void controllingFunction() {
-		/* This loop to keep taking commands */
-	    while (!quit) {
-	        /* Menu sent to the user before every command */
-	        System.out.println("");
-	        System.out.println("Valid commands:"); 
-	        System.out.println("QUIT");
-	        System.out.println("KEYWORD");
-	        
-	        /* Take user command */
-	        userCommand = input.nextLine();
-	        
-	        String currentToken;
-	        /* Break the user command to tokens */
-	        StringTokenizer tokens = new StringTokenizer(userCommand);
-	        currentToken = tokens.nextToken();
-	        String Command = currentToken;
-	        userCommand = Command.toUpperCase();
-	        
-	        System.out.println(" ");
-	        
-	        /* Accidental No-Command */
-	        if (userCommand.equals("")){
-	            System.out.println("ERROR: No command entered.");
-	            continue;
-	        }
-	        
-	        /* Quit Command */
-	        else if (userCommand.equals("QUIT") && isConnected == true) {
-	            
-	            /* Tells the server that this client wants disconnect */
-	            String toSend = port + " " + "QUIT";
-	            outToServer_Control.println(toSend);
-	            outToServer_Control.flush();
-	            /* Tells the client to stop itself */
-	            quit = true;            
-	            
-	        /* Quit Command */
-	        } else if (userCommand.equals("QUIT") && isConnected == false) {
-	            /* Tells the client to stop itself */
-	            quit = true;
-	            
-	        /* Keyword Command */
-	        } else if (userCommand.contains("KEYWORD") 
-	                && isConnected == true) {  
-	        	
-	        	/*Pass the argument into the keyword */
-	        	String keyword;
-	            try {
-	            	keyword = tokens.nextToken();
-	            } catch (Exception e) {
-	               System.out.println("ERROR: Did not give arguement " +
-	                   "to STOR.");
-	               continue;
-	            }
-	            try {
-	                /* Send the request over the control line */
-	                String toSend = port + " " + "KEYWORD" + " " + 
-	                    keyword;
-	                outToServer_Control.println(toSend);
-	                outToServer_Control.flush();
-	            }catch (Exception e) {
-	            System.out.println("ERROR: Did not give " + 
-	                    "arguement to KEYWORD.");
-	                continue;
-	            }
-	        }
-        /* End of controlling while */
-	    }
-	}
+
 /* End of FTP client */
 
 }
 
+//}
