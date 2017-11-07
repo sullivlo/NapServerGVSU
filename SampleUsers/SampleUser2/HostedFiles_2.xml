@@ -1,64 +1,64 @@
 <All_Files>
 
-    <File id="0001">    
-        <DisplayName> Child Playing With Toy Stock Image </DisplayName>
-        <FileName> car-toy-childhood-child-163768.jpeg </FileName>
+    <File id="0001">   
+        <DisplayName>Child Playing With Toy Stock Image</DisplayName>
+        <FileName>car-toy-childhood-child-163768.jpeg</FileName>
         <Keywords>
-            <Key> Image </Key>
-            <Key> jpeg </Key>
-            <Key> Stock Image </Key>
-            <Key> Child </Key>
-            <Key> Toy </Key>
-        </Keywords>
-    </File>
+            <Key>Image</Key>
+            <Key>jpeg</Key>
+            <Key>Stock Image</Key>
+            <Key>Child</Key>
+            <Key>Toy</Key>
+       </Keywords>
+   </File>
 
     <File id="0002">
-        <DisplayName> Toy Tractor Stock Image </DisplayName>
-        <FileName> pexels-photo-131777.jpeg </FileName>
+        <DisplayName>Toy Tractor Stock Image</DisplayName>
+        <FileName>pexels-photo-131777.jpeg</FileName>
         <Keywords>
-            <Key> Image </Key>
-            <Key> jpeg </Key>
-            <Key> Stock Image </Key>
-            <Key> Tractor </Key>
-            <Key> Red </Key>
-            <Key> Toy </Key>
-        </Keywords>
-    </File>
+            <Key>Image</Key>
+            <Key>jpeg</Key>
+            <Key>Stock Image</Key>
+            <Key>Tractor</Key>
+            <Key>Red</Key>
+            <Key>Toy</Key>
+       </Keywords>
+   </File>
 
     <File id="0003">
-        <DisplayName> Child Coloring Stock Image </DisplayName>
-        <FileName> pexels-photo-207653.jpeg </FileName>
+        <DisplayName>Child Coloring Stock Image</DisplayName>
+        <FileName>pexels-photo-207653.jpeg</FileName>
         <Keywords>
-            <Key> Image </Key>
-            <Key> jpeg </Key>
-            <Key> Stock Image </Key>
-            <Key> Child </Key>
-            <Key> Coloring </Key>
-        </Keywords>
-    </File>
+            <Key>Image</Key>
+            <Key>jpeg</Key>
+            <Key>Stock Image</Key>
+            <Key>Child</Key>
+            <Key>Coloring</Key>
+       </Keywords>
+   </File>
     
     <File id="0004">
-        <DisplayName> Christmas Decoration Stock Image </DisplayName>
-        <FileName> pexels-photo-225251.jpeg </FileName>
+        <DisplayName>Christmas Decoration Stock Image</DisplayName>
+        <FileName>pexels-photo-225251.jpeg</FileName>
         <Keywords>
-            <Key> Image </Key>
-            <Key> jpeg </Key>
-            <Key> Stock Image </Key>
-            <Key> Christmas </Key>
-            <Key> Red </Key>
-        </Keywords>
-    </File>
+            <Key>Image</Key>
+            <Key>jpeg</Key>
+            <Key>Stock Image</Key>
+            <Key>Christmas</Key>
+            <Key>Red</Key>
+       </Keywords>
+   </File>
     
     <File id="0005">
-        <DisplayName> Child Coloring Stock Image </DisplayName>
-        <FileName> pexels-photo-256468.jpeg </FileName>
+        <DisplayName>Child Coloring Stock Image</DisplayName>
+        <FileName>pexels-photo-256468.jpeg</FileName>
         <Keywords>
-            <Key> Image </Key>
-            <Key> jpeg </Key>
-            <Key> Stock Image </Key>
-            <Key> Coloring </Key>
-            <Key> Child </Key>
-        </Keywords>
-    </File>
+            <Key>Image</Key>
+            <Key>jpeg</Key>
+            <Key>Stock Image</Key>
+            <Key>Coloring</Key>
+            <Key>Child</Key>
+       </Keywords>
+   </File>
 
 </All_Files>
