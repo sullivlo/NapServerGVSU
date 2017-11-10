@@ -70,11 +70,12 @@ public class ClientHandler extends Thread{
     	/* Keeps tracks of when to close the thread */
         boolean stayAlive = true;
         /** Gets user information from the host      */
-        
+        StringTokenizer userTokens;
         try {
         	 userInformation = inFromClient.nextLine();
+        	 System.out.println(userInformation);
         	         	 
-        	 StringTokenizer userTokens = new StringTokenizer(userInformation);
+        	 userTokens = new StringTokenizer(userInformation);
         	
         	 UserName = userTokens.nextToken();
         	 UserName = UserName.replaceAll("@@", " ");
@@ -86,15 +87,20 @@ public class ClientHandler extends Thread{
         	  
         	 UserSpeed = userTokens.nextToken();
         	 System.out.println("UserSpeed " + UserSpeed); 
+        	 
+        	 
         }
+             
         
         catch (Exception e) {
             /* Host did not supply user information  */
             System.out.println("");
             System.out.println("ERROR: Host did not supply user information");
         }
-        
-        
+       // ArrayList<String[]> FileNamewKeys = new Arraylist();
+        /**
+         * Todo: Parse filenames, keys out of string 
+         */
             
         /* The controlling loop that keeps the user alive */
         while (stayAlive) {
