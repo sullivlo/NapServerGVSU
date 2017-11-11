@@ -3,29 +3,30 @@ import java.util.ArrayList;
 public class HostedDescriptions {
 	
 	private ArrayList<String> speeds;
-	private ArrayList<String> hostname;
-	private ArrayList<String> filename;
+	private ArrayList<String> hostnames;
+	private ArrayList<String> filenames;
 
 	public HostedDescriptions() {
 			
-		ArrayList<String> speeds = new ArrayList<String>();
-		ArrayList<String> hostname = new ArrayList<String>();
-		ArrayList<String> filename = new ArrayList<String>();
-			
-		String TEST = new String();
+		speeds = new ArrayList<String>();
+		hostnames = new ArrayList<String>();
+		filenames = new ArrayList<String>();
 	}
 	
-	public void addValue (String addThis) {
-		speeds.add (addThis);
+	public void addValues (String addThisToSpeeds, String addThisToHostname, String addThisToFilename) {
+		this.speeds.add(addThisToSpeeds);
+		this.hostnames.add(addThisToHostname);
+		this.filenames.add(addThisToFilename);
 	}
 		
-	public void remove (String IP) {
-		
-	}
-
-	public String testMethod() {
-		// TODO Auto-generated method stub
-		return "Great, it works!";
-		// return null;
+	public void remove (String hostname) {
+		for(int i = 0; i < hostnames.size(); i++) {
+			if(hostnames.get(i).equals(hostname)) {
+				hostnames.remove(i);
+				speeds.remove(i);
+				filenames.remove(i);
+				i--;
+			}
+		}
 	}
 }
