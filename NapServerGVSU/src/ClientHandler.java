@@ -23,6 +23,7 @@ public class ClientHandler extends Thread{
     private String UserName;
     private String UserHostName;
     private  String UserSpeed;
+    private  String tmpFileName, tmpKeyWords;
     
     
     /** This contains objects of all the hosted files */
@@ -67,26 +68,144 @@ public class ClientHandler extends Thread{
     public void run(){   
     	
     	
+    	/**
+    	 * TESTING
+    	 */
+    	
+    	//String test1 = CentralServer.descriptions.remove("127.0.0.1");
+    	//System.out.println(test1);
+    	
     	/* Keeps tracks of when to close the thread */
         boolean stayAlive = true;
         /** Gets user information from the host      */
         StringTokenizer userTokens;
         try {
-        	 userInformation = inFromClient.nextLine();
-        	 System.out.println(userInformation);
+        	/* DEBUG: This shows precisely what is sent over the control-line */ 
+        	userInformation = inFromClient.nextLine();
+        	// System.out.println(userInformation);
         	         	 
         	 userTokens = new StringTokenizer(userInformation);
         	
         	 UserName = userTokens.nextToken();
         	 UserName = UserName.replaceAll("@@", " ");
         	 System.out.println("UserName " + UserName);
+        	 /**
+        	  * Todo: Call Object and find the usernames
+        	  * 
+        	  * 
+        	  */
+        	 //boolean tmpOnServer;
+        	 //tmpOnServer =  Object.GetNameOnServer(UserName);
+        	 //if (tmpOnServer)
+        	 //end connection with client
         	  
         	 UserHostName = userTokens.nextToken();
         	 UserHostName = UserHostName.replaceAll("@@", " ");
         	 System.out.println("UserHostName " + UserHostName);
+        	 
         	  
         	 UserSpeed = userTokens.nextToken();
         	 System.out.println("UserSpeed " + UserSpeed); 
+        	 
+        	 /* Just for show */
+        	 System.out.println(" ");
+        	 
+        	 /* Variables used in parsing the crazy string */
+        	 String tmp_a_Token, tmpFilename, tmp_c_Token;
+        	 /* First "Filename" */
+        	 tmp_a_Token = userTokens.nextToken();
+        	 /* First "Image.jpg" */
+        	 tmpFileName = userTokens.nextToken();
+        	 String tmpKeywordList = "";
+        	 while(true) {
+        		 /* If there are still tokens left */
+        		 try {
+        			 /* Should mostly be keys */
+        			 tmp_c_Token = userTokens.nextToken();
+        		 } catch (Exception e) {
+        			 /* The last submit, as if "Filename" found again */
+        			 
+        			 /* ADD: addValues () */
+        			 
+        			 System.out.println("Submit: " + tmpFileName + tmpKeywordList);
+        			 break;
+        		 }
+        		 if(tmp_c_Token.equals("FileName")) {
+        			 
+        			 /* ADD: addValues () */
+        			 
+        			 System.out.println("Submit: " + tmpFileName + tmpKeywordList);
+        			 tmpKeywordList = "";
+        			 /* Image.jpg */
+        			 tmpFileName = userTokens.nextToken();
+        		 } 
+        		 else {
+        			 tmpKeywordList = tmpKeywordList + " " + tmp_c_Token; 
+        		 }
+        	 }
+        	 
+        	 /**
+        	  * Louis add bananas
+        	  */
+        	 
+        	 /*
+        	 String tmpToken  ;
+        	 tmpKeyWords = " ";
+        	 boolean newFileDescription = true;
+             while(true)
+             {
+             	try{
+             		tmpToken = userTokens.nextToken();
+             		
+             	}catch (Exception e){
+             		break;
+             	}
+             	
+             	if (tmpToken.equals("FileName")){
+             		
+             		
+             		tmpToken = userTokens.nextToken();
+             		
+             		tmpFileName = tmpToken;
+             				
+             		System.out.println("XFileName: " + tmpToken);
+             	}
+             	
+             	System.out.println("FileName: " + tmpToken);
+             	
+             	while(!(tmpToken.equals("FileName"))){
+             		
+             		tmpToken = userTokens.nextToken();
+             		
+             		if (tmpToken.equals("FileName")) {
+             			tmpToken = userTokens.nextToken();
+             			System.out.println("XXXFileNameXXX: " + tmpToken);
+             			break;
+             		}
+             		
+             		tmpKeyWords = tmpKeyWords + " " + tmpToken;
+             		//System.out.println("Keys: " + tmpToken);
+             		
+             	}
+             	System.out.println("addValues: " + tmpKeyWords);
+             	tmpKeyWords = " ";
+             	
+             	//addValues (String addThisToSpeeds, String addThisToHostname, String addThisToFilename, String addThisToKeywords)
+             	//System.out.println("FileName boolean " + tmpFileName );
+             	//newFileDescription = true;
+             	
+             	
+             	
+             	
+             	
+             	
+             	
+             
+             }	 
+             //System.out.println("Keys: " + tmpKeyWords);
+              */
+        	 
+        	 
         	 
         	 
         }
@@ -97,11 +216,27 @@ public class ClientHandler extends Thread{
             System.out.println("");
             System.out.println("ERROR: Host did not supply user information");
         }
+        
        // ArrayList<String[]> FileNamewKeys = new Arraylist();
         /**
          * Todo: Parse filenames, keys out of string 
+         * 
+         * FileName pexels-photo-218863.jpeg             
+         * Image Keyboard Laptop Stock Image Mac jpeg          
+         * FileName pexels-photo-225223.jpeg             
+         * Image Cell Phone Breakfast Soda Stock Image jpeg          
+         * FileName pexels-photo-225767.jpeg             
+         * Image Laptop Keyboard Paper Pen jpeg         
+         * FileName pexels-photo-4545	7.jpeg 
+         * 
+         * 
          */
-            
+        
+	        
+	        
+        //descriptions.add(UserSpeed, UserHostName, tmpFileName, tmpKeyWords);
+        
+        
         /* The controlling loop that keeps the user alive */
         while (stayAlive) {
         	
