@@ -13,6 +13,7 @@ import java.awt.*;
  *
  */
 
+
 public class CentralServer {
 	ArrayList<HostLog> HostedFiles = new ArrayList<HostLog>();
 	
@@ -20,57 +21,47 @@ public class CentralServer {
     private static ServerSocket welcomeSocket;
     
     public static void main(String[] args) throws IOException {
-        System.out.println("\nServer initialized. Waiting for " +
+        
+        /* Show server starting status */
+        System.out.println(" ");
+        System.out.println("Server initialized. Waiting for " +
                                 "connections.");
+        
+        /* Initialize the welcome socket */
         try {
             welcomeSocket = new ServerSocket(welcomePort);
         }
         catch (IOException ioEx) {
-            System.out.println("\nERROR: Unable to set up port!");
+            System.out.println(" ");
+            System.out.println("  ERROR: Unable to set up port!");
             System.exit(1);
         }
 
+        /* Perform a loop to wait for new connections */
         do {
             /* Wait for client... */
             Socket connectionSocket = welcomeSocket.accept();
 
-            System.out.println("\nNew Client Connected to Server.");
-            System.out.println("IP: " + 
-                connectionSocket.getInetAddress());
+            System.out.println("\nNew Client Connected to Server!");
+            
+            /* For debugging */
+            // System.out.println("  DEBUG: New Connection's IP: " + 
+            //     connectionSocket.getInetAddress());
 
-            /* Create a thread to handle communication with  */
-            /* this client and pass the constructor for this */
-            /* thread a reference to the relevant socket...  */
+            /* 
+             Create a thread to handle communication with this client and 
+             pass the constructor for this thread a reference to the 
+             relevant socket and user IP.  
+            */
             ClientHandler handler = new ClientHandler(connectionSocket);
+
+            /* Start a new thread for this client */
             handler.start();
         
         } while (true);
+
+
+    /* End of main() */
     }
+/* End of public class CentralServer */
 }
-	
-
-
-/* TO-DO: implement the server's ability to make "objects" that 
- * contain the information for each file availble. (1) the hostIP, (2) the filename
- * (3) the userSpeed and (4) the "description" that has keywords.
- */
-	/*
-	 * User has entered Filename, UserIP, UserSpeed, Description 
-	 */
-	
-	/*public void addFile() 
-	{
-		HostLog tmp = new HostLog(
-		Filename, UserIP, 
-		UserSpeed, Description);
-	
-	}*/
-	
-	
-		
-
-
-
-
-	
-
