@@ -18,6 +18,9 @@ public class ClientHandler extends Thread{
     /** This is used to grab bytes over the data-line */
     private String recvMsg;
     
+    /** This is for thread control */
+    private boolean endThread = false;
+    
     /** This takes the user information from the host     */
     private String userInformation;
     private String UserName;
@@ -77,6 +80,14 @@ public class ClientHandler extends Thread{
         try {
             /* This grabs the string of data with filenames and keys */
         	userInformation = inFromClient.nextLine();
+        	
+        	/* Client is "connected", but did not read from own XML. */
+        	if (userInformation.equals("XML-READ-ERROR")) {
+                System.out.println("  ERROR-01: [" + remoteIP + "] had XML" +
+                                   " troubles in connection!");
+                endThread = true;
+                throw new EmptyStackException();
+        	}
         	
         	/* For Debugging. This shows what is read from control-line. */ 
         	// System.out.println("  DEBUG: Read-In: " + userInformation);
@@ -165,19 +176,27 @@ public class ClientHandler extends Thread{
              
         } catch (Exception e) {
             /* Host did not supply user information  */
-            System.out.println("");
-            System.out.println("  ERROR: Host did not supply user information");
-            System.out.println("  ERROR: Ending user's thread");
-            
-            /* End the thread */
+            System.out.println("  ERROR-04: Host did not supply user information");
+            endThread = true;
+        }
+        
+        /* End the thread */
+        if (endThread == true) {
+            System.out.println("  ERROR-03: Ending user's thread");
             return;
         }
+        /* For debugging */
+        // System.out.println("  DEBUG-01: User's thread running");
+        
         
         /* TODO - Add this? BRENDON, Nov 11. */
         //descriptions.add(UserSpeed, UserHostName, tmpFileName, tmpKeyWords);
         
         /* The controlling loop that keeps the user alive */
         while (stayAlive) {
+        	
+        	/* For debugging */
+            // System.out.println("  DEBUG-02: User's thread running");
         	
             /* This reads the command from the client */
             try {
