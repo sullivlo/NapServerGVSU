@@ -24,7 +24,7 @@ public class Host {
 	/* User's name of computer... and IP */
 	private String hostname;
 	/* User's submitted internet speed */
-	private String speed;	
+	private String speed;
 	
 	/* Checks for the user being already connected */
     private boolean isConnected = false;
@@ -108,10 +108,8 @@ public class Host {
 		     of parsing from XML. 
 		     https://www.mkyong.com/java/how-to-read-xml-file-in-java-dom-parser/
 		    */
-		    
-		    /* BRENDON TEMP */
 			String allFilenamesAndKeys = "";
-		    
+		    boolean errorReadingXML = false;
 		    try {
 		    	/* Prepare the document for XML extraction */
 			    File fXmlFile = new File("HostedFiles.xml");
@@ -181,8 +179,8 @@ public class Host {
 		    } catch (Exception e) {
 		        System.out.println("  ERROR: Error in reading XML " + 
 		                           "document!");
-		        System.out.println("  ERROR: Did not attempt connect!");
 		        hadConnectErrors = true;
+		        errorReadingXML = true;
 		    } 
 		    
 		    /* 
@@ -205,6 +203,23 @@ public class Host {
 		        outToServer_Control.println(newUserInformation);
 		        outToServer_Control.flush();
 		    }
+		    else if (isConnected == true && hadConnectErrors == true && errorReadingXML == true) {
+		        /* Send command to end thread because of client issues. */
+		        
+		        /* Which error message to send */
+		        String sendErrorMessage = "XML-READ-ERROR";
+		                                    
+		        /* For debugging. View the sent filenames and keys. */
+		        System.out.print("  DEBUG: Sent String: " 
+		                         + sendErrorMessage);
+		                         
+		        /* Send the error message */
+		        outToServer_Control.println(sendErrorMessage);
+		        outToServer_Control.flush();
+		        
+		        /* Reset the connected status to later reconnect */
+		        isConnected = false;
+		    } 
 		    else {
 		        /* 
 		         Return to user that there was an error in connecting. 
