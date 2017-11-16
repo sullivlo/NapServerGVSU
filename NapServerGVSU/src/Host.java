@@ -197,8 +197,8 @@ public class Host {
 		                                    + allFilenamesAndKeys;
 		                                    
 		        /* For debugging. View the sent filenames and keys. */
-		        System.out.print("  DEBUG: Sent String To Connect: " 
-		                         + newUserInformation);
+		        // System.out.print("  DEBUG: Sent String To Connect: " 
+		        //                  + newUserInformation);
 		                         
 		        outToServer_Control.println(newUserInformation);
 		        outToServer_Control.flush();
@@ -235,7 +235,12 @@ public class Host {
 		        System.out.println("  DEBUG: Error in connecting...");
 		    }
 		    
-		/* Ends of if(isConnected) */   
+		/* Ends of if(isConnected == false) */   
+	    }
+	    else {
+	        /* For debugging */
+		    System.out.println("  DEBUG-04: Already connected to Central" +
+		    "-Server!");
 	    }
 	    
 	     
