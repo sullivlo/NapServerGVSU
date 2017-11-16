@@ -32,8 +32,11 @@ public class GUI {
 	private JTextField textField_5;
 	private JComboBox comboBoxSpeed;
 	
+	/* CHANGED */
 	private Host host = new Host();
-	
+	private HostServer hostServer;
+	/* Holds the condition of whether Host-as-Server is setup */
+	private boolean alreadySetupFTPServer = false;
 
 	/**
 	 * Launch the application.
@@ -114,7 +117,45 @@ public class GUI {
 				
 				String speed = comboBoxSpeed.getSelectedItem().toString();
 				
-				host.connectToServer(serverHostname, port, username, hostname, speed);
+				/* Make sure the user has typed in a username */
+				if (!username.equals("  ")) {
+				    /* 
+				     This internally handles the user clicking "connect"
+				     multiple times.
+				    */
+				    host.connectToServer(serverHostname, port, username, hostname, speed);
+				}
+				
+				/* Makes the host a FTP server as well. */
+				if (alreadySetupFTPServer == false) {
+		            try {
+		                /* 
+		                 This starts a new thread for FTP-as-Server-Handling 
+			             This allows for the GUI to act separately from the
+			             actions of the FTP part of the client 
+			            */
+			            hostServer = new HostServer();
+                        hostServer.start();
+                        
+                        /* 
+                         Next "Connect" click will now NOT try this
+                         again. This important so that a multitude of 
+                         actions aren't being opened on the same port.
+                         */
+                        alreadySetupFTPServer = true;
+                        
+                        /* For debugging */
+		                // System.out.println("DEBUG-01: Initializing Host as FTP Server!");
+		                
+		            } catch(Exception f) {
+			            System.out.println("  ERROR-03: Failure to setup" +
+			             " client as a FTP-Server.");
+		            }
+		        }
+		        else {
+		            System.out.println("  DEBUG-03: Already setup as a FTP-Server!");
+		        }
+		        
 			}
 		});
 		btnConnect.setFont(new Font("Dialog", Font.BOLD | Font.ITALIC, 12));
@@ -128,13 +169,13 @@ public class GUI {
 		textFieldServerHostname.setColumns(10);
 		
 		textFieldUsername = new JTextField();
-		textFieldUsername.setText("Type in your username");
+		textFieldUsername.setText("  ");
 		textFieldUsername.setBounds(84, 39, 152, 19);
 		panelConnection.add(textFieldUsername);
 		textFieldUsername.setColumns(10);
 		
 		textFieldHostname = new JTextField();
-		textFieldHostname.setText("DCCLIENT/127.0.0.1");
+		textFieldHostname.setText("DCCLIENT");
 		textFieldHostname.setBounds(84, 66, 158, 19);
 		panelConnection.add(textFieldHostname);
 		textFieldHostname.setColumns(10);
