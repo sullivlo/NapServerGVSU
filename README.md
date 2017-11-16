@@ -148,3 +148,13 @@ __Server Requirements:__
 - Central-Server thread for particular user now shows that there was an attempt to connect in the case that the user had an XML-read error, then ends that thread.
 - Connecting client that has XML-read error now can repeat attempts to connect. User can fix the XML-filename while the GUI is still running, then connect.
 - Took a hard peek into Javier's new FTP-Host-Server implementation. 
+
+#### November 16, 2017
+
+**Brendon**
+- Merged Javier's code with the main branch.
+- Client as an FTP-Host to another client now has more framework. 
+  - Because our example-case is all on one computer, each GUI that runs needs its own port for another client to FTP-connect to. 
+  - Each client will now try 5 different ports as its "welcomePort" for FTP-connections.
+  - Each client has multithreading for the capacity of (1) multiple FTP-connections to it at once, and (2) to allow the GUI to run separately from the main GUI.
+- The CentralServer now grabs the client's IP from the connection rather than from text-input. The default "Hostname" was changed to reflect that.
