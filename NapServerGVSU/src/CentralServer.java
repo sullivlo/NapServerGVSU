@@ -13,7 +13,6 @@ import java.awt.*;
  *
  */
 
-
 public class CentralServer {
 	ArrayList<HostLog> HostedFiles = new ArrayList<HostLog>();
 	
