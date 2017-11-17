@@ -32,11 +32,15 @@ public class GUI {
 	private JTextField textField_5;
 	private JComboBox comboBoxSpeed;
 	
-	/* CHANGED */
 	private Host host = new Host();
 	private HostServer hostServer;
+	
+	/* This is used as a helper in initial connection to Central-Server */
+	private String hostFTPWelcomeport;
 	/* Holds the condition of whether Host-as-Server is setup */
 	private boolean alreadySetupFTPServer = false;
+	/* Holds the condition of whether connected to the Central-Server */
+	private boolean isConnectedToCentralServer = false;
 
 	/**
 	 * Launch the application.
@@ -117,17 +121,13 @@ public class GUI {
 				
 				String speed = comboBoxSpeed.getSelectedItem().toString();
 				
-				/* Make sure the user has typed in a username */
-				if (!username.equals("  ")) {
-				    /* 
-				     This internally handles the user clicking "connect"
-				     multiple times.
-				    */
-				    host.connectToServer(serverHostname, port, username, hostname, speed);
+				if (alreadySetupFTPServer == true) {
+				    /* For debugging */
+				    System.out.println("  DEBUG-06: FTP-Server is already running.");
 				}
 				
-				/* Makes the host a FTP server as well. */
-				if (alreadySetupFTPServer == false) {
+				/* Makes the host a FTP server */
+				if (!username.equals("") && alreadySetupFTPServer == false) {
 		            try {
 		                /* 
 		                 This starts a new thread for FTP-as-Server-Handling 
@@ -135,6 +135,13 @@ public class GUI {
 			             actions of the FTP part of the client 
 			            */
 			            hostServer = new HostServer();
+			            hostFTPWelcomeport = hostServer.getFTPWelcomePort();
+			            
+			            /* For debugging */
+			            // System.out.println("  DEBUG-05: WelcomePort: " +
+			            //    hostFTPWelcomeport);
+			            
+			            /* Initiate the thread */
                         hostServer.start();
                         
                         /* 
@@ -153,8 +160,31 @@ public class GUI {
 		            }
 		        }
 		        else {
-		            System.out.println("  DEBUG-03: Already setup as a FTP-Server!");
+		            System.out.println("  DEBUG-03: Did not attempt FTP-Server setup.");
 		        }
+				
+				/* Initialize connection to the Central-Server! */
+				if (!username.equals("")) {
+				    /* 
+				     This internally handles the user clicking "connect"
+				     multiple times.
+				    */
+				    try {
+				        /* NOV17 - This may need to behave differently to validate usernames */
+				        host.connectToServer(serverHostname, port, username, hostname, speed, hostFTPWelcomeport);
+				        isConnectedToCentralServer = true;
+				    }
+				    catch (Exception g) {
+				        System.out.println("  ERROR-03: Issue connecting to Central-Server!");
+				        isConnectedToCentralServer = false;
+				    }
+				}
+				else {
+				    /* For debugging */
+				    System.out.println("  DEBUG-07: Did not attempt CS-Connection.");
+				}
+				
+				
 		        
 			}
 		});
@@ -169,7 +199,7 @@ public class GUI {
 		textFieldServerHostname.setColumns(10);
 		
 		textFieldUsername = new JTextField();
-		textFieldUsername.setText("  ");
+		textFieldUsername.setText("");
 		textFieldUsername.setBounds(84, 39, 152, 19);
 		panelConnection.add(textFieldUsername);
 		textFieldUsername.setColumns(10);
@@ -213,6 +243,49 @@ public class GUI {
 		textField_4.setColumns(10);
 		
 		JButton btnSearch = new JButton("Search");
+		btnSearch.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			/*
+			 Actions to happen on click of "Search"
+			*/
+			    String keySearch = textField_4.getText();
+			
+			    if(!keySearch.equals("")) {
+			    
+			        if (alreadySetupFTPServer == true && isConnectedToCentralServer == true) {
+			            
+			            /* This may hold values to paste to GUI boxes */
+			            String results;
+			        
+			            /* 
+			             TODO - have this function return the values so that
+			             we can use them to generate GUI boxes. For now, let's
+			             debug issues and get halfway there. 
+			            */
+			            
+			            /* Query the server for the User's string of keywords */
+			            host.queryKeywords(keySearch);
+			            
+			            /* 
+			             TODO - Now, Update the fields on our GUI so that 
+			             the end-user may download files from another.
+			            */   
+			        }
+			        else {
+			            /* For debugging */
+			            System.out.println("  DEBUG-04: User not connected to Central-Server!");
+			        }
+			    
+			    }
+			    else {
+			        /* For debugging */
+			        System.out.println("  DEBUG-08: No current keyword. Did not send request!");
+			    }
+			
+			
+			
+			}
+		});
 		btnSearch.setBounds(313, 6, 90, 19);
 		btnSearch.setFont(new Font("Dialog", Font.BOLD | Font.ITALIC, 12));
 		panelSearch.add(btnSearch);
