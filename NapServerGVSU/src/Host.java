@@ -25,6 +25,13 @@ public class Host {
 	private String hostname;
 	/* User's submitted internet speed */
 	private String speed;
+	/* User's FTP port for others to connect to for downloading */
+	private String hostFTPWelcomePort;
+	
+    /* This handles the control-line out stream */
+    PrintWriter outToServer_Control = null;
+    /* This handles the control-line input stream */
+    Scanner inFromServer_Control = null;
 	
 	/* Checks for the user being already connected */
     private boolean isConnected = false;
@@ -43,7 +50,7 @@ public class Host {
 	 */
 	public void connectToServer(String serverHostname, String port, 
 	                            String username, String hostname, 
-	                            String speed) {
+	                            String speed, String hostFTPWelcomePort) {
 	                            
 		/* Taking the parameters from the GUI */
 		this.serverHostname = serverHostname;
@@ -51,13 +58,11 @@ public class Host {
 		this.username = username;
 		this.hostname = hostname;
 		this.speed = speed;
+		this.hostFTPWelcomePort = hostFTPWelcomePort;
 	    
 	    /* This socket handles communicating main commands to server */
 	    Socket controlSocket = null;	    
-	    /* This handles the control-line out stream */
-	    PrintWriter outToServer_Control = null;
-	    /* This handles the control-line input stream */
-	    Scanner inFromServer_Control = null;
+
 	    /* To catch if there was errors. Limits sending. */
 	    boolean hadConnectErrors = false;
 	    
@@ -193,7 +198,7 @@ public class Host {
 		         its associated keys to the Central-Server 
 		         */
 		        String newUserInformation = username + " " + hostname + " "
-		                                    + speed + " " 
+		                                    + speed + " " + hostFTPWelcomePort + " " 
 		                                    + allFilenamesAndKeys;
 		                                    
 		        /* For debugging. View the sent filenames and keys. */
@@ -202,6 +207,13 @@ public class Host {
 		                         
 		        outToServer_Control.println(newUserInformation);
 		        outToServer_Control.flush();
+		        
+		        /* TODO - 
+		         Wait for response from server to validate that THAT 
+		         username is valid. Username may be the best unique 
+		         identifiers for end-users. It may also help in backend.
+		        */
+		        
 		    }
 		    else if (isConnected == true && hadConnectErrors == true && errorReadingXML == true) {
 		        /* Send command to end thread because of client issues. */
@@ -243,85 +255,26 @@ public class Host {
 		    "-Server!");
 	    }
 	    
-	     
-	    /* Below is fossil code. May or may not use. */
-	    /* Note that the connectToServer() method does not need to loop */
-	    
-
-	    /* This loop to keep taking commands */
-////	    while (!quit) {
-////	        /* Menu sent to the user before every command */
-////	        System.out.println("");
-////	        System.out.println("Valid commands:"); 
-////	        System.out.println("QUIT");
-////	        System.out.println("KEYWORD");
-////	        
-////	        /* Take user command */
-////	        userCommand = input.nextLine();
-////	        
-////	        String currentToken;
-////	        /* Break the user command to tokens */
-////	        StringTokenizer tokens = new StringTokenizer(userCommand);
-////	        currentToken = tokens.nextToken();
-////	        String Command = currentToken;
-////	        userCommand = Command.toUpperCase();
-////	        
-////	        System.out.println(" ");
-////	        
-////	        /* Accidental No-Command */
-////	        if (userCommand.equals("")){
-////	            System.out.println("ERROR: No command entered.");
-////	            continue;
-////	        }
-////	        
-////	        /* Quit Command */
-////	        else if (userCommand.equals("QUIT") && isConnected == true) {
-////	            
-////	            /* Tells the server that this client wants disconnect */
-////	            String toSend = port + " " + "QUIT";
-////	            outToServer_Control.println(toSend);
-////	            outToServer_Control.flush();
-////	            /* Tells the client to stop itself */
-////	            quit = true;            
-////	            
-////	        /* Quit Command */
-////	        } else if (userCommand.equals("QUIT") && isConnected == false) {
-////	            /* Tells the client to stop itself */
-////	            quit = true;
-////	            
-////	        /* Keyword Command */
-////	        } else if (userCommand.contains("KEYWORD") 
-////	                && isConnected == true) {  
-////	        	
-////	        	/*Pass the argument into the keyword */
-////	        	String keyword;
-////	            try {
-////	            	keyword = tokens.nextToken();
-////	            } catch (Exception e) {
-////	               System.out.println("ERROR: Did not give arguement " +
-////	                   "to STOR.");
-////	               continue;
-////	            }
-////	            try {
-////	                /* Send the request over the control line */
-////	                String toSend = port + " " + "KEYWORD" + " " + 
-////	                    keyword;
-////	                outToServer_Control.println(toSend);
-////	                outToServer_Control.flush();
-////	            }catch (Exception e) {
-////	            System.out.println("ERROR: Did not give " + 
-////	                    "arguement to KEYWORD.");
-////	                continue;
-////	            }
-////	        }
-//    	
-//        /* End of controlling while */
-//	    }*/
-
-
-
 	/* End of connectToServer() */
 	}
+
+    /* This allows the GUI to send a keyword search to the Central-Server */
+    public void queryKeywords(String keySearch) {
+    
+        /* Prepare the command for the central-server */
+        String toSend = "KEYWORD" + " " + keySearch;
+        
+        /* Send the query to the server! */
+        outToServer_Control.println(toSend);
+		outToServer_Control.flush();
+		
+		/* For debugging */
+        // System.out.println("  DEBUG: Sending: " + toSend);
+        // System.out.println("  DEBUG: End of queryKeywords()");
+
+    /* End of queryKeywords() */
+    }
+
 
 /* End of FTP client */
 }
