@@ -164,15 +164,29 @@ public class GUI {
 		        }
 				
 				/* Initialize connection to the Central-Server! */
-				if (!username.equals("")) {
+				if (!username.equals("") && isConnectedToCentralServer == false) {
 				    /* 
 				     This internally handles the user clicking "connect"
 				     multiple times.
 				    */
 				    try {
 				        /* NOV17 - This may need to behave differently to validate usernames */
-				        host.connectToServer(serverHostname, port, username, hostname, speed, hostFTPWelcomeport);
-				        isConnectedToCentralServer = true;
+				        int report = host.connectToServer(serverHostname, port, username, hostname, speed, hostFTPWelcomeport);
+				        
+				        
+				        if (report == -2 || report == -3 || report == -4) {
+				            /* Taken Username and other errors */       
+				            isConnectedToCentralServer = false;
+				        }
+				        else if(report == 1) {
+				            isConnectedToCentralServer = true;
+				        }
+				        else {				            
+				            /* For debugging */
+				            System.out.println("  ERROR: General failure in connecting to Central-Server.");
+				            
+				            isConnectedToCentralServer = false;
+				        }
 				    }
 				    catch (Exception g) {
 				        System.out.println("  ERROR-03: Issue connecting to Central-Server!");
