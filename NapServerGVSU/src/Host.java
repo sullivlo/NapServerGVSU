@@ -48,7 +48,7 @@ public class Host {
 	 * @param username
 	 * @param hostname
 	 */
-	public void connectToServer(String serverHostname, String port, 
+	public int connectToServer(String serverHostname, String port, 
 	                            String username, String hostname, 
 	                            String speed, String hostFTPWelcomePort) {
 	                            
@@ -186,6 +186,7 @@ public class Host {
 		                           "document!");
 		        hadConnectErrors = true;
 		        errorReadingXML = true;
+		        return (-6);
 		    } 
 		    
 		    /* 
@@ -208,6 +209,37 @@ public class Host {
 		        outToServer_Control.println(newUserInformation);
 		        outToServer_Control.flush();
 		        
+		        String recvMsg;
+		        try {
+		            /* Wait for response from server */
+		            recvMsg = inFromServer_Control.nextLine();
+		            
+		            if (recvMsg.equals("GOOD-USERNAME")) {
+		                /* For debugging */
+                        System.out.println("  DEBUG: Good username!");
+                        isConnected = true;
+		                return (1);
+		            }
+		            else if (recvMsg.equals("BAD-USERNAME")) {
+		                /* For debugging */
+                        System.out.println("  DEBUG: Bad username!");
+                        isConnected = false;
+		                return (-2);
+		            }
+		            else {
+		                /* For debugging */
+                        System.out.println("  DEBUG: Corrupted response from server!");
+                        isConnected = false;
+		                return (-3);
+		            }
+                } 
+                catch (Exception e) {
+                    /* For debugging */
+                    System.out.println("  DEBUG: Failed response from server!");
+                    isConnected = false;
+                    return (-4);
+                }
+ 
 		        /* TODO - 
 		         Wait for response from server to validate that THAT 
 		         username is valid. Username may be the best unique 
@@ -245,6 +277,7 @@ public class Host {
 		        
 		        /* For debugging */
 		        System.out.println("  DEBUG: Error in connecting...");
+		        return (-5);
 		    }
 		    
 		/* Ends of if(isConnected == false) */   
@@ -253,8 +286,10 @@ public class Host {
 	        /* For debugging */
 		    System.out.println("  DEBUG-04: Already connected to Central" +
 		    "-Server!");
+		    return (-7);
 	    }
 	    
+	    return (0);
 	/* End of connectToServer() */
 	}
 
