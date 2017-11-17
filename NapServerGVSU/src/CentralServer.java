@@ -14,7 +14,7 @@ import java.awt.*;
  */
 
 public class CentralServer {
-	ArrayList<HostLog> HostedFiles = new ArrayList<HostLog>();
+	private static HostedDescriptions totalHostedDescriptions = new HostedDescriptions();
 	
 	private static final int welcomePort = 1234;
     private static ServerSocket welcomeSocket;
@@ -52,7 +52,7 @@ public class CentralServer {
              pass the constructor for this thread a reference to the 
              relevant socket and user IP.  
             */
-            ClientHandler handler = new ClientHandler(connectionSocket);
+            ClientHandler handler = new ClientHandler(connectionSocket, totalHostedDescriptions);
 
             /* Start a new thread for this client */
             handler.start();
