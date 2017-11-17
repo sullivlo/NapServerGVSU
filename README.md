@@ -55,8 +55,6 @@ connection speed (the host name and connection speed is retrieved from the corre
 
 ## Notes for Developers
 
-*Big thanks to Javier for writing this up!*
-
 ### Work-Flow of Server-Host Connection
 
 1. Host-A connects to "Centralized Server" (CS) and simultaneously uploads files to share and their associated descriptions.
@@ -158,3 +156,16 @@ __Server Requirements:__
   - Each client will now try 5 different ports as its "welcomePort" for FTP-connections.
   - Each client has multithreading for the capacity of (1) multiple FTP-connections to it at once, and (2) to allow the GUI to run separately from the main GUI.
 - The CentralServer now grabs the client's IP from the connection rather than from text-input. The default "Hostname" was changed to reflect that.
+
+#### November 17, 2017
+
+**Brendon**
+- Upon new host connection, the server-log displays the host's data in a friendly way
+- More error-handling
+- Some old code cleanup
+- The GUI now sends keywords to the Central-Server
+- The Central-Server displays commands read from hosts in a way that supports multiple hosts well
+- Added some client-side handling
+  - Form must have a username to initiate ANY connection to the Central-Server
+  - Form must have SOMETHING in the keywords textfield to intiate a search
+
