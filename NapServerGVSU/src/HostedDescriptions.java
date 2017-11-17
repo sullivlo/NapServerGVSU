@@ -61,7 +61,7 @@ public class HostedDescriptions {
 	    ArrayList<String> variousUsernames = new ArrayList<String>();
 	    int numberOfUsers;
 	    try {
-            variousUsernames.add( usernames.get(0) );l
+            variousUsernames.add( usernames.get(0) );
             for(int i = 0; i < usernames.size(); i++) {
                 if (!variousUsernames.contains( usernames.get(i) )) {
                     variousUsernames.add( usernames.get(i) );
