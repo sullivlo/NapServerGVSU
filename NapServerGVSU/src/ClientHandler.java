@@ -28,10 +28,8 @@ public class ClientHandler extends Thread{
     private String UserSpeed;
     private String UserFTPWelcomePort;
     private String tmpFileName, tmpKeyWords;
-    
-    /** This contains objects of all the hosted files */
-    /* THIS SHOULD BE GLOBAL TO THE ENTIRE SERVER */
-    private ArrayList<FileContainer> AllFiles;
+      
+    private HostedDescriptions allHostedDescriptions;  
       
 	/*******************************************************************
     *
@@ -40,7 +38,11 @@ public class ClientHandler extends Thread{
     * Things here happen once, exclusively with THIS connected client.
     *
     ******************************************************************/
-   public ClientHandler(Socket controlListen) {
+   public ClientHandler(Socket controlListen, HostedDescriptions totalHostedDescriptions) {
+       
+       /* Make this all... point to the total... */
+       allHostedDescriptions = totalHostedDescriptions;
+       
        try {
            /* Setting up a threaded input control-stream */
            inFromClient = new Scanner (
@@ -96,9 +98,11 @@ public class ClientHandler extends Thread{
         	/* Make the string parseable by tokens */         	 
         	userTokens = new StringTokenizer(userInformation);
         	
-        	/*
-        	 TODO - Check User's username for copies.
-        	 Brendon - NOV 11, 2017
+        	/* Initialize and display the new user's shown username */
+            UserName = userTokens.nextToken();
+            UserName = UserName.replaceAll("@@", " ");
+            
+            /*
         	 We can error handle multiple users on the same IP (two people 
         	 from the same house) by checking THIS username against the 
         	 stored ones. On User-SUCCESS, of choosing a unique one, 
@@ -108,12 +112,27 @@ public class ClientHandler extends Thread{
         	 A failure to the user will look as nothing happened, while
         	 success will look as a table generated.
         	*/
-        	
-        	/* Initialize and display the new user's shown username */
-            UserName = userTokens.nextToken();
-            UserName = UserName.replaceAll("@@", " ");
+            
+            /* If username taken, throw error, return a message, and stop thread. */
+        	if (allHostedDescriptions.isUsernameTaken(UserName)) {
+                System.out.println("  ERROR-02: \""+ UserName + "\" [" + remoteIP + "] must" +
+                                   " pick another username to connect!");
+                                   
+                /* Send notification to client to rechoose a username */
+                outToClient.println("BAD-USERNAME");
+                outToClient.flush();
+                
+                endThread = true;
+                throw new EmptyStackException();
+        	}
+        	else {
+        	    /* Send confirmation of username choice */
+        	    outToClient.println("GOOD-USERNAME");
+                outToClient.flush();
+        	}
+            
             System.out.println("Username: " + UserName);
-                        
+                     
             /* 
              TODO - Change UserHostName
              Brendon - NOV 11, 2017
@@ -157,7 +176,7 @@ public class ClientHandler extends Thread{
             
             String tmpKeywordList = "";
             int numberOfFilesDescriptions = 0;
-            while(true) {
+            while (true) {
                 /* If there are still tokens left */
                 try {
                     /* Should mostly be keys */
@@ -165,7 +184,8 @@ public class ClientHandler extends Thread{
                 } catch (Exception e) {
                     /* The last submit, as if "Filename" found again */
 
-                    /* TODO ADD: addValues () */
+                    /* Add file description to the main collection */
+                    allHostedDescriptions.addValues(UserSpeed, UserHostName, tmpFileName, tmpKeywordList, UserName, remoteIP, UserFTPWelcomePort);
 
                     /* For debugging */
                     // System.out.println("Submit: " + tmpFileName + tmpKeywordList);
@@ -175,9 +195,10 @@ public class ClientHandler extends Thread{
                     
                     break;
                 }
-                if(tmp_c_Token.equals("FILENAME")) {
+                if (tmp_c_Token.equals("FILENAME")) {
 
-                    /* TODO ADD: addValues () */
+                    /* Add file description to the main collection */
+                    allHostedDescriptions.addValues(UserSpeed, UserHostName, tmpFileName, tmpKeywordList, UserName, remoteIP, UserFTPWelcomePort);
 
                     /* For debugging */
                     // System.out.println("Submit: " + tmpFileName + tmpKeywordList);
@@ -198,17 +219,26 @@ public class ClientHandler extends Thread{
              Once the file-descriptions are parsed, display a success 
              report of number of uploads to output on the server.
              */
-            System.out.println("Number-of-Files: " + numberOfFilesDescriptions);
+            System.out.println("Number-of-Uploaded-Files: " + numberOfFilesDescriptions);
              
         } catch (Exception e) {
             /* Host did not supply user information  */
-            System.out.println("  ERROR-04: Host did not supply user information");
+            System.out.println("  ERROR-04: Host did not supply valid information");
             endThread = true;
         }
         
         /* End the thread */
         if (endThread == true) {
             System.out.println("  ERROR-03: Ending user's thread");
+            
+            /* Remove all rows with this username */
+            allHostedDescriptions.remove(UserName);
+            
+            /* Show the server data on user-leave */
+            System.out.println(" ");
+            allHostedDescriptions.showData();
+            System.out.println(" ");
+            
             return;
         }
         
@@ -218,9 +248,11 @@ public class ClientHandler extends Thread{
         /* For debugging */
         // System.out.println("  DEBUG-01: User's thread running");
         
+        /* For show. View the server's main data points on each new entrance! */
+        allHostedDescriptions.showData();
         
-        /* TODO - Add this? BRENDON, Nov 11. */
-        // descriptions.add(UserSpeed, UserHostName, tmpFileName, tmpKeyWords);
+        /* For show. To separate information. */
+        System.out.println(" ");
         
         /* The controlling loop that keeps the user alive */
         while (stayAlive) {
@@ -236,9 +268,13 @@ public class ClientHandler extends Thread{
                 /* Client left early, or otherwise */
                 System.out.println("Client " + UserName + " [" + remoteIP + "] left early!");
                 
+                /* Remove all rows with this username */
+                allHostedDescriptions.remove(UserName);
                 
-                /* TODO - Remove THIS user's data from tables in this moment */
-                
+                /* Show the server data on user-leave */
+                System.out.println(" ");
+                allHostedDescriptions.showData();
+                System.out.println(" ");
                 
                 break;
             }
@@ -284,17 +320,6 @@ public class ClientHandler extends Thread{
 
                         keyWords = tokens.nextToken();
                         System.out.println("keyWords " + keyWords);
-
-                        /* TODO - Is this to current? BRENDON, NOV 11. */
-                        /* Set up one "File" object to be updated on server */
-                        FileContainer tempContainer = new FileContainer();
-                        tempContainer.setFileName(fileName);
-                        tempContainer.setHostIP("TEMP");
-                        tempContainer.setSpeed("TEMP");
-                        tempContainer.setKeyString("TEMP");
-
-                        /* Adds this object to the general list of hosted files */
-                        AllFiles.add(tempContainer);
                     }
                 }
                 catch (Exception e) {
@@ -313,6 +338,10 @@ public class ClientHandler extends Thread{
             /* For server log printing */
             if (commandFromClient.equals("QUIT")) {
                 System.out.println("Client " + UserName + " [" + remoteIP + "] disconnected!");
+                
+                /* Remove all rows with this username */
+                allHostedDescriptions.remove(UserName);
+                
                 stayAlive = false;
             }
             else if (commandFromClient.equals("KEYWORD")) {
