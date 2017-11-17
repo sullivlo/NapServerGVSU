@@ -26,7 +26,6 @@ public class HostServer extends Thread {
 	
 	private boolean successfullySetFTPPort = false;
 	
-	/* NEW Nov 16 */
 	public HostServer() {
 	    /* Show server starting status */
         System.out.println(" ");
@@ -96,6 +95,17 @@ public class HostServer extends Thread {
             System.out.println("ERROR-01: Failure in setting up a thread.");
         }
     }
+    
+    /* 
+     Once the host-FTP-server is setup, we know it's welcomePort. THEN,
+     this needs to be passed to the Central-Server to allow others to 
+     download files from this host. This function helps in this process.
+     */
+    public String getFTPWelcomePort() {
+        return Integer.toString(welcomePort);
+    }
+    
+    
 	
 /* End of Entire HostServer Class */
 }
@@ -275,4 +285,3 @@ class FTPClientHandler extends Thread {
     
 /* End of the thread class */  
 }
-
