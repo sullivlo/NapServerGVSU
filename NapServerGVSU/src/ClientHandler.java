@@ -26,6 +26,7 @@ public class ClientHandler extends Thread{
     private String UserName;
     private String UserHostName;
     private String UserSpeed;
+    private String UserFTPWelcomePort;
     private String tmpFileName, tmpKeyWords;
     
     /** This contains objects of all the hosted files */
@@ -135,18 +136,27 @@ public class ClientHandler extends Thread{
             System.out.println("UserSpeed: " + UserSpeed); 
 
             /* Display new user's IP */
-            System.out.println("IP Address: " + remoteIP); 
-
-            /* Just for show */
-            System.out.println(" ");
+            System.out.println("IP-Address: " + remoteIP);
+            
+            /* Display new user's FTP Welcome Port */
+            UserFTPWelcomePort = userTokens.nextToken();
+            System.out.println("FTP-Welcome-Port: " + UserFTPWelcomePort);
         	 
             /* Variables used in parsing the crazy string */
             String tmp_a_Token, tmpFilename, tmp_c_Token;
-            /* First "Filename" */
-            tmp_a_Token = userTokens.nextToken();
-            /* First "Image.jpg" */
-            tmpFileName = userTokens.nextToken();
+            try {
+                /* First "Filename" */
+                tmp_a_Token = userTokens.nextToken();
+                /* First "Image.jpg" */
+                tmpFileName = userTokens.nextToken();
+            }
+            catch (Exception e) {
+                /* There seems to be no uploads from this user */
+                System.out.println("  DEBUG-06: No uploads from user.");
+            }
+            
             String tmpKeywordList = "";
+            int numberOfFilesDescriptions = 0;
             while(true) {
                 /* If there are still tokens left */
                 try {
@@ -157,22 +167,38 @@ public class ClientHandler extends Thread{
 
                     /* TODO ADD: addValues () */
 
-                    System.out.println("Submit: " + tmpFileName + tmpKeywordList);
+                    /* For debugging */
+                    // System.out.println("Submit: " + tmpFileName + tmpKeywordList);
+                    
+                    /* To show number of uploads at user entry */
+                    numberOfFilesDescriptions++;
+                    
                     break;
                 }
                 if(tmp_c_Token.equals("FILENAME")) {
 
                     /* TODO ADD: addValues () */
 
-                    System.out.println("Submit: " + tmpFileName + tmpKeywordList);
+                    /* For debugging */
+                    // System.out.println("Submit: " + tmpFileName + tmpKeywordList);
+                    
+                    /* To show number of uploads at user entry */
+                    numberOfFilesDescriptions++;
+                    
                     tmpKeywordList = "";
-                    /* Image.jpg */
+                    /* "Image.jpg" */
                     tmpFileName = userTokens.nextToken();
                 } 
                 else {
                     tmpKeywordList = tmpKeywordList + " " + tmp_c_Token; 
                 }
             }
+            
+            /* 
+             Once the file-descriptions are parsed, display a success 
+             report of number of uploads to output on the server.
+             */
+            System.out.println("Number-of-Files: " + numberOfFilesDescriptions);
              
         } catch (Exception e) {
             /* Host did not supply user information  */
@@ -185,12 +211,16 @@ public class ClientHandler extends Thread{
             System.out.println("  ERROR-03: Ending user's thread");
             return;
         }
+        
+        /* For show. To separate user-logins. */
+        System.out.println(" ");
+        
         /* For debugging */
         // System.out.println("  DEBUG-01: User's thread running");
         
         
         /* TODO - Add this? BRENDON, Nov 11. */
-        //descriptions.add(UserSpeed, UserHostName, tmpFileName, tmpKeyWords);
+        // descriptions.add(UserSpeed, UserHostName, tmpFileName, tmpKeyWords);
         
         /* The controlling loop that keeps the user alive */
         while (stayAlive) {
@@ -205,18 +235,25 @@ public class ClientHandler extends Thread{
             } catch (Exception e) {
                 /* Client left early, or otherwise */
                 System.out.println("Client " + UserName + " [" + remoteIP + "] left early!");
+                
+                
+                /* TODO - Remove THIS user's data from tables in this moment */
+                
+                
                 break;
             }
+            
+            /* For token handling */
             String returnedString = "";
             String currentToken;
             StringTokenizer tokens = new StringTokenizer(recvMsg);
 
-            String clientDataPort = tokens.nextToken();
-
             /* Client command, "UPDATE" or another. */
             String commandFromClient = tokens.nextToken();
-             
-            String key, fileName, keyWords; 
+            
+            /* For variable handling */
+            String key, fileName, keyWords;  
+            String totalKeys = "";
              
             /* While checks for more user input in the token */
             while (tokens.hasMoreTokens()) {
@@ -226,48 +263,68 @@ public class ClientHandler extends Thread{
                 /* NOTE - This "clientDataPort" may be changed later. It was added to
                  * have continuity with the FTP-server that we developed. Oct 25.
                  */
-                 
-                /* This command closes this client-thread */
-                if(commandFromClient.equals("QUIT")){
-                    System.out.println("Client " + UserName + " [" + remoteIP + "] disconnected!");
-                    stayAlive = false;	
-                    break;   
+                
+                try {
+                    
+                    /* This commands initiates the keyword-search */
+                    if(commandFromClient.equals("KEYWORD")){
+                        /*Passes the last arguement into the key */
+                        key = tokens.nextToken();
+                        
+                        /* For debugging */
+                        // System.out.println("Key " + key);
+                        totalKeys = totalKeys + " " + key;
+                    }
+                    /* This command updates the files the host have in their root directory */ 
+                    else if(commandFromClient.equals("UPDATE")){
+
+                        /* Passes the last arguement into the key */
+                        fileName = tokens.nextToken();
+                        System.out.println("Filename: " + fileName);
+
+                        keyWords = tokens.nextToken();
+                        System.out.println("keyWords " + keyWords);
+
+                        /* TODO - Is this to current? BRENDON, NOV 11. */
+                        /* Set up one "File" object to be updated on server */
+                        FileContainer tempContainer = new FileContainer();
+                        tempContainer.setFileName(fileName);
+                        tempContainer.setHostIP("TEMP");
+                        tempContainer.setSpeed("TEMP");
+                        tempContainer.setKeyString("TEMP");
+
+                        /* Adds this object to the general list of hosted files */
+                        AllFiles.add(tempContainer);
+                    }
                 }
-                /* This commands initiates the keyword-search */
-                else if(commandFromClient.equals("KEYWORD")){
-                    System.out.println("Client " + UserName + " [" + remoteIP + "]: ");
-                    System.out.println("COMMAND: KEYWORD");
-                    /*Passes the last arguement into the key */
-                    key = tokens.nextToken();
-                    System.out.println("Key " + key);
+                catch (Exception e) {
+                /* Was there a token error? */
+                
+                    /* For debugging */
+                    System.out.println(" DEBUG-07: End of Parsing Tokens");
                 }
-                /* This command updates the files the host have in their root directory */ 
-                else if(commandFromClient.equals("UPDATE")){
-                    System.out.println("Client " + UserName + " [" + remoteIP + "]: ");
-                    System.out.println("COMMAND: UPDATE");
-
-                    /* Passes the last arguement into the key */
-                    fileName = tokens.nextToken();
-                    System.out.println("Filename: " + fileName);
-
-                    keyWords = tokens.nextToken();
-                    System.out.println("keyWords " + keyWords);
-
-                    /* TODO - Is this to current? BRENDON, NOV 11. */
-                    /* Set up one "File" object to be updated on server */
-                    FileContainer tempContainer = new FileContainer();
-                    tempContainer.setFileName(fileName);
-                    tempContainer.setHostIP("TEMP");
-                    tempContainer.setSpeed("TEMP");
-                    tempContainer.setKeyString("TEMP");
-
-                    /* Adds this object to the general list of hosted files */
-                    AllFiles.add(tempContainer);
-	            	 
-	            	 
-                }
-	             
+	        
+	        /* End of hasMoreTokens loop */    
             }
+            
+            /* For server log printing */
+            System.out.println("Client " + UserName + " [" + remoteIP + "]: ");
+            
+            /* For server log printing */
+            if (commandFromClient.equals("QUIT")) {
+                System.out.println("Client " + UserName + " [" + remoteIP + "] disconnected!");
+                stayAlive = false;
+            }
+            else if (commandFromClient.equals("KEYWORD")) {
+                System.out.println("Ran Command: KEYWORD:" + totalKeys);
+            }
+            else if (commandFromClient.equals("UPDATE")) {
+                System.out.println("Ran Command: UPDATE");
+            }
+            
+            /* For server log printing */
+            System.out.println(" ");
+            
                 
         /* End of the other while loop */
         }
