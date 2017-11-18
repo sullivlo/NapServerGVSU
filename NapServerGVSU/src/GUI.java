@@ -21,6 +21,9 @@ import java.awt.TextArea;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
+/* For tokens */
+import java.util.*;
+
 public class GUI {
 
 	private JFrame frame;
@@ -124,7 +127,12 @@ public class GUI {
 				if (alreadySetupFTPServer == true) {
 				    /* For debugging */
 				    System.out.println("  DEBUG-06: FTP-Server is already running.");
+				    
 				}
+				
+				/* TODO - For displaying to the user */
+				// IF NO USERNAME
+				// THEN DISPLAY "Please enter a USERNAME"
 				
 				/* Makes the host a FTP server */
 				if (!username.equals("") && alreadySetupFTPServer == false) {
@@ -245,6 +253,7 @@ public class GUI {
 		TextArea textArea = new TextArea();
 		textArea.setBounds(10, 31, 395, 121);
 		panelSearch.add(textArea);
+		textArea.setEditable(false);
 		
 		JLabel lblKeyword = new JLabel("Keyword:");
 		lblKeyword.setBounds(12, 10, 63, 15);
@@ -278,12 +287,100 @@ public class GUI {
 			            */
 			            
 			            /* Query the server for the User's string of keywords */
-			            host.queryKeywords(keySearch);
-			            
-			            /* 
-			             TODO - Now, Update the fields on our GUI so that 
-			             the end-user may download files from another.
-			            */   
+			            String returnedFileData = host.queryKeywords(keySearch);
+
+                        /* For debugging */
+                        // textArea.setText( returnedFileData );
+                        
+                        /* For initial textarea */
+                        textArea.setText("");
+                        
+                        String stringForTextArea = "";
+                        
+                        /* This contains all the FILES as tokens to be parsed */
+                        StringTokenizer tokens = new StringTokenizer(returnedFileData);	
+    
+                        /* 
+                         If there was no files == "NOFOUNDMATCHES"
+                         If there was files == "FILE"
+                         If there was error == "ERROR"
+                        */
+                        String firstToken = "";
+                        try {
+                            firstToken = tokens.nextToken();
+                        }
+                        catch (Exception g) {
+                            System.out.println("  DEBUG: First token threw error!");
+                        }
+                        
+                        String currentToken;
+                        
+                        if (firstToken == "ERROR") {
+                            System.out.println("  DEBUG-10: Error in parsing the returned string!");              
+                            /* Print in GUI "There was an error, try again..." */
+                            textArea.setText("There was an error...");
+                        }
+                        else if (firstToken == "NOFOUNDMATCHES") {
+                            System.out.println("  DEBUG-11: No found matches!");
+                        
+                            /* Print in GUI "no matches" */
+                            textArea.setText("No Found Matches...");
+                        }
+                        else if (firstToken == "FILE") {
+                            /* 
+                             For each filedescription, for each row, on the
+                             GUI. On each iteration in the while(), these 
+                             values change.
+                            */
+                            String tempUserPort = "";
+                            String tempFileName = "";
+                            String tempHostName = "";
+                            String tempUserName = "";
+                            String tempUserIP = "";
+                            String tempSpeed = "";
+                            String notUsed = "";
+                            
+                            /* Could be a TRY CATCH problem */
+                            try {
+                                while (tokens.hasMoreTokens()) {
+                                    // "Alice"
+                                    tempUserName = tokens.nextToken();
+                            
+                                    // "127.1.1.2"
+                                    tempUserIP = tokens.nextToken();
+                        
+                                    // "1235"
+                                    tempUserPort = tokens.nextToken();
+                                
+                                    // "Apples.jpg"
+                                    tempFileName = tokens.nextToken();
+                                    
+                                    // "Ethernet"
+                                    tempSpeed = tokens.nextToken();
+                                    
+                                    // textArea.append(" " + tempUserName + " " + tempUserIP + "::" + tempUserPort + " " + tempFileName + " " + tempSpeed + "\n");
+                                    
+                                    stringForTextArea = stringForTextArea + " " + tempUserName + " " + tempUserIP + "::" + tempUserPort + " " + tempFileName + " " + tempSpeed + "\n";
+                                    
+                                    // FILE
+                                    notUsed = tokens.nextToken();
+                                }
+                            }
+                            catch (Exception h) {
+                                System.out.println("  DEBUG: while() threw an error!");
+                            }
+                            
+                            /*
+                             TODO - 
+                             Find the error in why this doesn't print to the GUI
+                            */
+                            
+                            /* MAAAAYBE */
+                            textArea.setText( stringForTextArea );
+                            
+                        }    
+                        
+			               
 			        }
 			        else {
 			            /* For debugging */
