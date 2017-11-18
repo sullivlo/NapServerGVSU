@@ -187,4 +187,5 @@ __Server Requirements:__
 2. Implement the FTP functions for one client to another.
 3. Maaaaaaaybe implement a "Disconnect" button.
 4. Maaaaaaaybe validate the files from the XML document to actually exist (we had code for this from the last one).
-5. Maaaaaaaybe add more interesting sample-cases.
+5. Maaaaaaaybe add more interesting sample-cases-- do this by downloading more images from sites described in "SampleUsers" folder, and then creating appropriate XML files. 
+6. Maaaaaaaybe have the GUI understand the "ENTER" key to search and to connect.
