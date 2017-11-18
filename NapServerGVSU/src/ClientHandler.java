@@ -346,6 +346,24 @@ public class ClientHandler extends Thread{
             }
             else if (commandFromClient.equals("KEYWORD")) {
                 System.out.println("Ran Command: KEYWORD:" + totalKeys);
+                
+                /* 
+                 HERE, do the methods for figuring which things to send 
+                 back to the client.
+                */ 
+                String toSendToClient = allHostedDescriptions.getKeywordData(totalKeys);
+                
+
+                
+                
+                /* For debugging */
+                // String tempstring = "This works!";
+                
+                /* Send the query to the server! */
+                outToClient.println(toSendToClient);
+		        outToClient.flush();
+                
+                System.out.println("  DEBUG: Succesfully Sent: " + toSendToClient);
             }
             else if (commandFromClient.equals("UPDATE")) {
                 System.out.println("Ran Command: UPDATE");
