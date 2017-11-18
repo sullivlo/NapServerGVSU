@@ -168,6 +168,7 @@ __Server Requirements:__
 - Added some client-side handling.
   - Form must have a username to initiate ANY connection to the Central-Server.
   - Form must have SOMETHING in the keywords textfield to intiate a search.
+
 **Brendon**
 - Solved world hunger.
 - More error-handling.
@@ -175,6 +176,11 @@ __Server Requirements:__
 - Central-Server now stores each client's FTP-Welcome-Port. Each FTP-port, one per user, may be different in consideration of how many we have running from one IP. This port number is generated to have up to five different users on one computer. THIS is the number that allows one client to FTP-download from another.
 - On user-leave, the Central-Server's tables are updated.
 - The server output looks extra spiffy.
+
+**Brendon and Javier**
+- The Central-Server now sends a correct string of which files match the given keyword over the line
+- The Client GUI has that information of the matching keywords and can display on terminal
+- Attempts to have this display on the GUI correctly
 
 **TO DO**
 1. Figure how to update the GUI with new values in that form area.
