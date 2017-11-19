@@ -99,66 +99,59 @@ public class HostedDescriptions {
 	}
 	
 	public String getKeywordData(String keywordsList) {
-	
-	    /* keywordsLIST = "image apple banana tom cruise"
-	
-	    /* Construct the thing to return */
-	    /* Ex: "FILE username userIP userPort filename speed */
-	    String stringToReturn = "";
+		/* keywordsLIST = "image apple banana tom cruise"
 	    
+		/* Construct the thing to return */
+		/* Ex: "FILE username userIP userPort filename speed */
+		String stringToReturn = "";
+		
+		
+		
+		StringTokenizer tokens = new StringTokenizer(keywordsList);	
 	    
-	    
-	    StringTokenizer tokens = new StringTokenizer(keywordsList);	
-        
-        String grabbedFiles = "";
-        
-        while (tokens.hasMoreTokens()) {
-        
-            try {
-                /* currentToken equals one key from the client's string */
-                /* Ex: "apple" */
-                String currentToken = tokens.nextToken();
-            
-                /* Loops through all the files in search for a keyword */
-                for(int i= 0; i < keywords.size(); i++) {
-                    
-                    /* If a file has this keeyword inside */
-                    if ( keywords.get(i).contains(currentToken) && !grabbedFiles.contains(filenames.get(i)) ) {
-                        /* To build the string to send back */
-                        stringToReturn = stringToReturn + " FILE " + usernames.get(i) + " " +
-                        userIPs.get(i) + " " + userPorts.get(i) + " " + 
-                        filenames.get(i) + " " + speeds.get(i); 
-                         
-                        /* For checking if the file was already appended */
-                        grabbedFiles = grabbedFiles + " " + filenames.get(i);
-                    
-                        /* For debugging */
-                        System.out.println("  DEBUG-09: File has key (" + currentToken + "): " + filenames.get(i) );
-                    
-                    }
-                
-                }
-            
-                
-            
-            }
-            catch (Exception e) {
-                System.out.println("  ERROR-08: Caught nextToken error!");
-            }
-            
-            
-        }
-        
-        if (stringToReturn == "") {
-        
-            return ("NOFOUNDMATCHES");
-            
-        }
-        
-        
-	
-	    return stringToReturn;
-	
+		String grabbedFiles = "";
+		
+		while (tokens.hasMoreTokens()) {
+			try {
+				/* currentToken equals one key from the client's string */
+				/* Ex: "apple" */
+				String currentToken = tokens.nextToken();
+				
+				/* Loops through all the files in search for a keyword */
+				for(int i= 0; i < keywords.size(); i++) {
+				    
+				    /* If a file has this keeyword inside */
+				    if ( keywords.get(i).contains(currentToken) 
+					    && !grabbedFiles.contains(filenames.get(i)) ) {
+						/* To build the string to send back */
+						/*stringToReturn = stringToReturn + " FILE " + usernames.get(i) + " " +
+						userIPs.get(i) + " " + userPorts.get(i) + " " + 
+						filenames.get(i) + " " + speeds.get(i); */
+						
+						stringToReturn = stringToReturn + "FILE " + usernames.get(i) 
+						+ " " + userIPs.get(i) 
+						+ " " + userPorts.get(i) 
+						+ " " + filenames.get(i) 
+						+ " " + speeds.get(i);
+						
+						/* For checking if the file was already appended */
+						grabbedFiles = grabbedFiles + " " + filenames.get(i);
+					    
+						/* For debugging */
+						System.out.println("  DEBUG-09: File has "
+						+ "key (" + currentToken + "): " 
+						+ filenames.get(i) );
+				    }
+				}
+			}catch (Exception e) {
+			System.out.println("  ERROR-08: Caught nextToken error!");
+			}
+		}
+		
+		if (stringToReturn == "") {
+			return ("NOFOUNDMATCHES");
+		}
+		return stringToReturn;
 	}
 	
 	

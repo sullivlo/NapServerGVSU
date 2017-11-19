@@ -301,26 +301,24 @@ public class Host {
         
         /* Send the query to the server! */
         outToServer_Control.println(toSend);
-		outToServer_Control.flush();
+	outToServer_Control.flush();
 		
-		/* Listen for Server Response */
-		/* This would have all the files that have the key involved */
-		try {
-		    String recvMsg;
-		    recvMsg = inFromServer_Control.nextLine();
+	/* Listen for Server Response */
+	/* This would have all the files that have the key involved */
+	try {
+		String recvMsg;
+		recvMsg = inFromServer_Control.nextLine();
+		System.out.println("  DEBUG: Received message: " + recvMsg);
 		    
-		    System.out.println("  DEBUG: Received message: " + recvMsg);
+		return (recvMsg);
 		    
-		    return (recvMsg);
-		    
-		}
-		catch (Exception e) {
-		    System.out.println("  DEBUG: Connection broke with server while waiting for response.");
-		    return ("ERROR");
-		}
+	}catch (Exception e) {
+		System.out.println("  DEBUG: Connection broke with server while waiting for response.");
+		return ("ERROR");
+	}
 		
 		
-		/* For debugging */
+	/* For debugging */
         // System.out.println("  DEBUG: Sending: " + toSend);
         // System.out.println("  DEBUG: End of queryKeywords()");
 

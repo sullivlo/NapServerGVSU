@@ -276,7 +276,6 @@ public class GUI {
 			    if(!keySearch.equals("")) {
 			    
 			        if (alreadySetupFTPServer == true && isConnectedToCentralServer == true) {
-			            
 			            /* This may hold values to paste to GUI boxes */
 			            String results;
 			        
@@ -288,99 +287,94 @@ public class GUI {
 			            
 			            /* Query the server for the User's string of keywords */
 			            String returnedFileData = host.queryKeywords(keySearch);
+			            
+				    //String messageToPrint = returnedFileData.replaceAll("*", "\n");
 
-                        /* For debugging */
-                        // textArea.setText( returnedFileData );
-                        
-                        /* For initial textarea */
-                        textArea.setText("");
-                        
-                        String stringForTextArea = "";
-                        
-                        /* This contains all the FILES as tokens to be parsed */
-                        StringTokenizer tokens = new StringTokenizer(returnedFileData);	
-    
-                        /* 
-                         If there was no files == "NOFOUNDMATCHES"
-                         If there was files == "FILE"
-                         If there was error == "ERROR"
-                        */
-                        String firstToken = "";
-                        try {
-                            firstToken = tokens.nextToken();
-                        }
-                        catch (Exception g) {
-                            System.out.println("  DEBUG: First token threw error!");
-                        }
-                        
-                        String currentToken;
-                        
-                        if (firstToken == "ERROR") {
-                            System.out.println("  DEBUG-10: Error in parsing the returned string!");              
-                            /* Print in GUI "There was an error, try again..." */
-                            textArea.setText("There was an error...");
-                        }
-                        else if (firstToken == "NOFOUNDMATCHES") {
-                            System.out.println("  DEBUG-11: No found matches!");
-                        
-                            /* Print in GUI "no matches" */
-                            textArea.setText("No Found Matches...");
-                        }
-                        else if (firstToken == "FILE") {
-                            /* 
-                             For each filedescription, for each row, on the
-                             GUI. On each iteration in the while(), these 
-                             values change.
-                            */
-                            String tempUserPort = "";
-                            String tempFileName = "";
-                            String tempHostName = "";
-                            String tempUserName = "";
-                            String tempUserIP = "";
-                            String tempSpeed = "";
-                            String notUsed = "";
-                            
-                            /* Could be a TRY CATCH problem */
-                            try {
-                                while (tokens.hasMoreTokens()) {
-                                    // "Alice"
-                                    tempUserName = tokens.nextToken();
-                            
-                                    // "127.1.1.2"
-                                    tempUserIP = tokens.nextToken();
-                        
-                                    // "1235"
-                                    tempUserPort = tokens.nextToken();
-                                
-                                    // "Apples.jpg"
-                                    tempFileName = tokens.nextToken();
-                                    
-                                    // "Ethernet"
-                                    tempSpeed = tokens.nextToken();
-                                    
-                                    // textArea.append(" " + tempUserName + " " + tempUserIP + "::" + tempUserPort + " " + tempFileName + " " + tempSpeed + "\n");
-                                    
-                                    stringForTextArea = stringForTextArea + " " + tempUserName + " " + tempUserIP + "::" + tempUserPort + " " + tempFileName + " " + tempSpeed + "\n";
-                                    
-                                    // FILE
-                                    notUsed = tokens.nextToken();
-                                }
-                            }
-                            catch (Exception h) {
-                                System.out.println("  DEBUG: while() threw an error!");
-                            }
-                            
-                            /*
-                             TODO - 
-                             Find the error in why this doesn't print to the GUI
-                            */
-                            
-                            /* MAAAAYBE */
-                            textArea.setText( stringForTextArea );
-                            
-                        }    
-                        
-			               
+				    /* For debugging */
+				    textArea.setText( returnedFileData );
+				    
+				    /* For initial textarea */
+				    textArea.setText("");
+				    
+				    String stringForTextArea = "";
+				    
+				    /* This contains all the FILES as tokens to be parsed */
+				    StringTokenizer tokens = new StringTokenizer(returnedFileData);	
+		
+				    /* 
+				    If there was no files == "NOFOUNDMATCHES"
+				    If there was files == "FILE"
+				    If there was error == "ERROR"
+				    */
+				    String firstToken = "";
+				    try {
+					firstToken = tokens.nextToken();
+				    }
+				    catch (Exception g) {
+					System.out.println("  DEBUG: First token threw error!");
+				    }
+				    
+				    String currentToken;
+				    if (firstToken.equals("ERROR")) {
+					System.out.println("  DEBUG-10: Error in parsing the returned string!");              
+					/* Print in GUI "There was an error, try again..." */
+					textArea.setText("There was an error...");
+				    }
+				    else if (firstToken.equals("NOFOUNDMATCHES")) {
+					System.out.println("  DEBUG-11: No found matches!");
+				    
+					/* Print in GUI "no matches" */
+					textArea.setText("No Found Matches...");
+				    }
+				    else if (firstToken.equals("FILE")) {
+					/* 
+					For each filedescription, for each row, on the
+					GUI. On each iteration in the while(), these 
+					values change.
+					*/
+					String tempUserPort = "";
+					String tempFileName = "";
+					String tempHostName = "";
+					String tempUserName = "";
+					String tempUserIP = "";
+					String tempSpeed = "";
+					String notUsed = "";
+					
+					/* Could be a TRY CATCH problem */
+					try {
+					    while (tokens.hasMoreTokens()) {
+						// "Alice"
+						tempUserName = tokens.nextToken();
+					
+						// "127.1.1.2"
+						tempUserIP = tokens.nextToken();
+				    
+						// "1235"
+						tempUserPort = tokens.nextToken();
+					    
+						// "Apples.jpg"
+						tempFileName = tokens.nextToken();
+						
+						// "Ethernet"
+						tempSpeed = tokens.nextToken();
+						
+						stringForTextArea = stringForTextArea + "USERNAME: " 
+						    + tempUserName + "\nIP ADDRESS: " + tempUserIP 
+						    + "\nPORT NUMBER: " + tempUserPort 
+						    + "\nFILE NAME: " + tempFileName 
+						    + "\nSPEED: " + tempSpeed + "\n\n";
+						
+						// FILE
+						//notUsed = tokens.nextToken();
+					    }
+					}
+					catch (Exception h) {
+					    System.out.println("  DEBUG: while() threw an error!");
+					}
+					
+					stringForTextArea = stringForTextArea + "End of search list.";
+					textArea.setText(stringForTextArea);
+				    }
 			        }
 			        else {
 			            /* For debugging */
@@ -392,9 +386,6 @@ public class GUI {
 			        /* For debugging */
 			        System.out.println("  DEBUG-08: No current keyword. Did not send request!");
 			    }
-			
-			
-			
 			}
 		});
 		btnSearch.setBounds(313, 6, 90, 19);
