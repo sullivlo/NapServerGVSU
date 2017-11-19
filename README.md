@@ -188,9 +188,10 @@ __Server Requirements:__
 - Updated the hosts' reading the input data to strings and sending them to GUI.
 - Reformated the GUI's return on keyword search data.
 - Made text area on GUI display keyword search data.
+- Updated GUI and HostServer with Connect function; laid the framework for RETR and QUIT.
 
 **TO DO**
-1. Implement the FTP functions for one client to another.
+1. Implement the FTP functions for RETR, iron our CONNECT and QUIT.
 2. Maaaaaaaybe implement a "Disconnect" button.
 3. Maaaaaaaybe validate the files from the XML document to actually exist (we had code for this from the last one).
 4. Maaaaaaaybe add more interesting sample-cases-- do this by downloading more images from sites described in "SampleUsers" folder, and then creating appropriate XML files. 
