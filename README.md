@@ -190,9 +190,14 @@ __Server Requirements:__
 - Made text area on GUI display keyword search data.
 - Updated GUI and HostServer with Connect function; laid the framework for RETR and QUIT.
 
+### November 19, 2017
+
+**Matt** 
+- Finished the QUIT/disconnect function.
+
 **TO DO**
-1. Implement the FTP functions for RETR, iron our CONNECT and QUIT.
-2. Maaaaaaaybe implement a "Disconnect" button.
+1. Implement the FTP functions for RETR.
+2. Bug test the server recognizing two identical files of two different computers when searching for files by keyword. 
 3. Maaaaaaaybe validate the files from the XML document to actually exist (we had code for this from the last one).
 4. Maaaaaaaybe add more interesting sample-cases-- do this by downloading more images from sites described in "SampleUsers" folder, and then creating appropriate XML files. 
 5. Maaaaaaaybe have the GUI understand the "ENTER" key to search and to connect.
