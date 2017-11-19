@@ -466,7 +466,7 @@ public class GUI {
 							try{
 								connect(ipAddress, portNum);
 								toAdd = "Connected to " + ipAddress 
-								+ " on port " + portNum + "\n";
+								+ " on port " + portNum + "!\n";
 								
 							}catch (Exception q){
 								System.out.println("ERROR: Failed to connect"
@@ -491,12 +491,23 @@ public class GUI {
 							
 						}else if (firstToken.equals("quit")){
 							System.out.println("  DEBUG: Inside quit function.");
-							System.exit(0);
+							if (isConnectedToOtherHost != false){
+								disconnect();
+								toAdd = "Disconnected from " + ipAddress + ".\n";
+								System.out.print(toAdd);
+							}else {
+								toAdd = "Not connected to a host.\n";
+								System.out.println("Not connected to host.");
+							}
 						}else {
 							toAdd = "Invalid command!\n";
 						}
 					}
 				}else {
+					String commandLine = ftpCommandField.getText();
+					commandHistory = commandHistory + ">>> " + commandLine + "\n";
+					ftpTextArea.setText(commandHistory);
+					
 					toAdd = "Not connected to server!\n";
 				}
 				commandHistory = commandHistory + toAdd;
@@ -549,5 +560,16 @@ public class GUI {
                         "client!");
                     isConnectedToOtherHost = false;
 		}
+	}
+	
+	private void disconnect(){
+		 /* Disconnect from server's welcome socket */
+                outToHost.write("quit");
+		outToHost.flush();
+		
+		boolean controlSocketOpen = false;
+                inFromHost.close();
+                outToHost.close();
+		isConnectedToOtherHost = false;
 	}
 }

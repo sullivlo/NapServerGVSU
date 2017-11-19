@@ -193,7 +193,6 @@ class FTPClientHandler extends Thread {
 			//Try to get input from client
 			try {
 				recvMsg = inScanFromClient.nextLine();
-				//recvMsg = inScanFromClient.toString();
 			} catch (Exception e) {
 				System.out.println("");
 				System.out.println("NO INPUT FROM CLIENT");
@@ -258,11 +257,11 @@ class FTPClientHandler extends Thread {
 			    
 			}
 			else if(currentToken.toLowerCase().equals("quit")) {
-				//If the quit command is received, then the connection between the host client
-				//and this host server will close
 				try {
-				    controlListen.close();
-				    System.out.println("HOST SERVER: CONNECTION CLOSED");
+				    inScanFromClient = null;
+				    outToClient = null;
+				    remoteIP = "";
+				    System.out.println("Disconnected!");
 				} 
 				catch (Exception e) {
 				    System.out.println("  ERROR: Closing connection error");
@@ -271,7 +270,6 @@ class FTPClientHandler extends Thread {
 			else {
 				System.out.println("HOST SERVER: WRONG INPUT");
 			}
-
 		/* End of the other while loop */
 		}
 	
