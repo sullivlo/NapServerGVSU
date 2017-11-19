@@ -8,7 +8,7 @@ This system implements a "Central Server" that connects multiple peers to share 
 
 - Louis Sullivan
 - Javier Ramirez-Moyano
-- Matthew Schuck
+- Matthew Schuch
 - Brendon Murthum
 
 ## Assignment Information
@@ -182,10 +182,16 @@ __Server Requirements:__
 - The Client GUI has that information of the matching keywords and can display on terminal
 - Attempts to have this display on the GUI correctly
 
+### November 19, 2017
+
+**Matt & Louis** 
+- Updated the hosts' reading the input data to strings and sending them to GUI.
+- Reformated the GUI's return on keyword search data.
+- Made text area on GUI display keyword search data.
+
 **TO DO**
-1. Figure how to update the GUI with new values in that form area.
-2. Implement the FTP functions for one client to another.
-3. Maaaaaaaybe implement a "Disconnect" button.
-4. Maaaaaaaybe validate the files from the XML document to actually exist (we had code for this from the last one).
-5. Maaaaaaaybe add more interesting sample-cases-- do this by downloading more images from sites described in "SampleUsers" folder, and then creating appropriate XML files. 
-6. Maaaaaaaybe have the GUI understand the "ENTER" key to search and to connect.
+1. Implement the FTP functions for one client to another.
+2. Maaaaaaaybe implement a "Disconnect" button.
+3. Maaaaaaaybe validate the files from the XML document to actually exist (we had code for this from the last one).
+4. Maaaaaaaybe add more interesting sample-cases-- do this by downloading more images from sites described in "SampleUsers" folder, and then creating appropriate XML files. 
+5. Maaaaaaaybe have the GUI understand the "ENTER" key to search and to connect.
