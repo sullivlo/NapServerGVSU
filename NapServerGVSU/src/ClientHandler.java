@@ -84,14 +84,6 @@ public class ClientHandler extends Thread{
             /* This grabs the string of data with filenames and keys */
         	userInformation = inFromClient.nextLine();
         	
-        	/* Client is "connected", but did not read from own XML. */
-        	if (userInformation.equals("XML-READ-ERROR")) {
-                System.out.println("  ERROR-01: [" + remoteIP + "] had XML" +
-                                   " troubles in connection!");
-                endThread = true;
-                throw new EmptyStackException();
-        	}
-        	
         	/* For Debugging. This shows what is read from control-line. */ 
         	// System.out.println("  DEBUG: Read-In: " + userInformation);
         	
@@ -352,16 +344,13 @@ public class ClientHandler extends Thread{
                  back to the client.
                 */ 
                 String toSendToClient = allHostedDescriptions.getKeywordData(totalKeys);
-                
 
-                
-                
                 /* For debugging */
                 // String tempstring = "This works!";
                 
                 /* Send the query to the server! */
                 outToClient.println(toSendToClient);
-		        outToClient.flush();
+		outToClient.flush();
                 
                 System.out.println("  DEBUG: Succesfully Sent: " + toSendToClient);
             }

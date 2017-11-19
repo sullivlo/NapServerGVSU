@@ -6,10 +6,10 @@ import java.awt.*;
 
 /**
  * 
- * @author		    Brendon Murthum
- *                  Javier Ramirez-Moyano
- *                  Matthew Schuck
- *                  Louis Zullivan
+ * @author		Brendon Murthum
+ *                  	Javier Ramirez-Moyano
+ *                  	Matthew Schuch
+ *                  	Louis Zullivan
  *
  */
 

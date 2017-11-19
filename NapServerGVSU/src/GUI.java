@@ -20,6 +20,9 @@ import java.awt.Scrollbar;
 import java.awt.TextArea;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.net.*; 
+import java.util.*;
+import java.io.*; 
 
 /* For tokens */
 import java.util.*;
@@ -31,12 +34,24 @@ public class GUI {
 	private JTextField textFieldUsername;
 	private JTextField textFieldHostname;
 	private JTextField textFieldPort;
-	private JTextField textField_4;
-	private JTextField textField_5;
+	private JTextField keywordSearchField;
+	private JTextField ftpCommandField;
 	private JComboBox comboBoxSpeed;
+	
+	private String commandHistory = "";
+	private String ipAddress = "";
+	private String portNum = "";
 	
 	private Host host = new Host();
 	private HostServer hostServer;
+	private Socket controlSocket;
+	private boolean isConnectedToOtherHost = false;
+	
+	/* This handles the control-line out stream */
+        PrintWriter outToHost = null;
+        
+        /* This handles the control-line in stream */
+        Scanner inFromHost = null;
 	
 	/* This is used as a helper in initial connection to Central-Server */
 	private String hostFTPWelcomeport;
@@ -150,16 +165,16 @@ public class GUI {
 			            //    hostFTPWelcomeport);
 			            
 			            /* Initiate the thread */
-                        hostServer.start();
-                        
-                        /* 
-                         Next "Connect" click will now NOT try this
-                         again. This important so that a multitude of 
-                         actions aren't being opened on the same port.
-                         */
-                        alreadySetupFTPServer = true;
-                        
-                        /* For debugging */
+				    hostServer.start();
+				    
+				    /* 
+				    Next "Connect" click will now NOT try this
+				    again. This important so that a multitude of 
+				    actions aren't being opened on the same port.
+				    */
+				    alreadySetupFTPServer = true;
+				    
+				    /* For debugging */
 		                // System.out.println("DEBUG-01: Initializing Host as FTP Server!");
 		                
 		            } catch(Exception f) {
@@ -250,20 +265,20 @@ public class GUI {
 		frame.getContentPane().add(panelSearch);
 		panelSearch.setLayout(null);
 		
-		TextArea textArea = new TextArea();
-		textArea.setBounds(10, 31, 395, 121);
-		panelSearch.add(textArea);
-		textArea.setEditable(false);
+		TextArea keywordSearchArea = new TextArea();
+		keywordSearchArea.setBounds(10, 31, 395, 121);
+		panelSearch.add(keywordSearchArea);
+		keywordSearchArea.setEditable(false);
 		
 		JLabel lblKeyword = new JLabel("Keyword:");
 		lblKeyword.setBounds(12, 10, 63, 15);
 		lblKeyword.setFont(new Font("Dialog", Font.PLAIN, 12));
 		panelSearch.add(lblKeyword);
 		
-		textField_4 = new JTextField();
-		textField_4.setBounds(68, 6, 233, 19);
-		panelSearch.add(textField_4);
-		textField_4.setColumns(10);
+		keywordSearchField = new JTextField();
+		keywordSearchField.setBounds(68, 6, 233, 19);
+		panelSearch.add(keywordSearchField);
+		keywordSearchField.setColumns(10);
 		
 		JButton btnSearch = new JButton("Search");
 		btnSearch.addActionListener(new ActionListener() {
@@ -271,7 +286,7 @@ public class GUI {
 			/*
 			 Actions to happen on click of "Search"
 			*/
-			    String keySearch = textField_4.getText();
+			    String keySearch = keywordSearchField.getText();
 			
 			    if(!keySearch.equals("")) {
 			    
@@ -291,10 +306,10 @@ public class GUI {
 				    //String messageToPrint = returnedFileData.replaceAll("*", "\n");
 
 				    /* For debugging */
-				    textArea.setText( returnedFileData );
+				    keywordSearchArea.setText( returnedFileData );
 				    
 				    /* For initial textarea */
-				    textArea.setText("");
+				    keywordSearchArea.setText("");
 				    
 				    String stringForTextArea = "";
 				    
@@ -318,13 +333,13 @@ public class GUI {
 				    if (firstToken.equals("ERROR")) {
 					System.out.println("  DEBUG-10: Error in parsing the returned string!");              
 					/* Print in GUI "There was an error, try again..." */
-					textArea.setText("There was an error...");
+					keywordSearchArea.setText("There was an error...");
 				    }
 				    else if (firstToken.equals("NOFOUNDMATCHES")) {
 					System.out.println("  DEBUG-11: No found matches!");
 				    
 					/* Print in GUI "no matches" */
-					textArea.setText("No Found Matches...");
+					keywordSearchArea.setText("No Found Matches...");
 				    }
 				    else if (firstToken.equals("FILE")) {
 					/* 
@@ -373,7 +388,7 @@ public class GUI {
 					}
 					
 					stringForTextArea = stringForTextArea + "End of search list.";
-					textArea.setText(stringForTextArea);
+					keywordSearchArea.setText(stringForTextArea);
 				    }
 			        }
 			        else {
@@ -398,21 +413,96 @@ public class GUI {
 		frame.getContentPane().add(panelFTP);
 		panelFTP.setLayout(null);
 		
-		TextArea textArea_1 = new TextArea();
-		textArea_1.setBounds(10, 33, 395, 137);
-		panelFTP.add(textArea_1);
+		TextArea ftpTextArea = new TextArea();
+		ftpTextArea.setBounds(10, 33, 395, 137);
+		panelFTP.add(ftpTextArea);
+		ftpTextArea.setEditable(false);
 		
 		JLabel lblEnterCommand = new JLabel("Enter Command:");
 		lblEnterCommand.setFont(new Font("Dialog", Font.PLAIN, 12));
 		lblEnterCommand.setBounds(12, 12, 125, 15);
 		panelFTP.add(lblEnterCommand);
 		
-		textField_5 = new JTextField();
-		textField_5.setBounds(119, 10, 225, 19);
-		panelFTP.add(textField_5);
-		textField_5.setColumns(10);
+		ftpCommandField = new JTextField();
+		ftpCommandField.setBounds(119, 10, 225, 19);
+		panelFTP.add(ftpCommandField);
+		ftpCommandField.setColumns(10);
 		
 		JButton btnGo = new JButton("Go");
+		btnGo.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				/*
+				Actions to happen on click of "Search"
+				*/
+				String toAdd = "";
+				
+				if (alreadySetupFTPServer == true && isConnectedToCentralServer == true) {
+					String commandLine = ftpCommandField.getText();
+					commandHistory = commandHistory + ">>> " + commandLine + "\n";
+					ftpTextArea.setText(commandHistory);
+					
+					StringTokenizer cmdTokens = new StringTokenizer(commandLine);
+					String firstToken = cmdTokens.nextToken();
+					firstToken = firstToken.toLowerCase();
+					
+					if(!firstToken.equals("")) {
+						if (firstToken.equals("connect")){
+							System.out.println("  DEBUG: Inside connect function.");
+							
+							try {
+								ipAddress = cmdTokens.nextToken();
+								portNum = cmdTokens.nextToken();
+								
+								toAdd = "Connecting to " + ipAddress +
+								    " on port " + portNum + "\n";
+							}catch (Exception q){
+								System.out.println("ERROR: Improper or invalid " +
+								    "arguments!");
+								toAdd = "ERROR: Improper or invalid " +
+								    "arguments!\n";
+							}
+							
+							//Connect to other user's HostServer.
+							try{
+								connect(ipAddress, portNum);
+								toAdd = "Connected to " + ipAddress 
+								+ " on port " + portNum + "\n";
+								
+							}catch (Exception q){
+								System.out.println("ERROR: Failed to connect"
+								+ " to server!");
+								toAdd = "ERROR: Failed to connect"
+								+ " to server!\n";
+							}
+							
+						}else if (firstToken.equals("retr")){
+							System.out.println("  DEBUG: Inside retr function.");
+							
+							try {
+								String fileName = cmdTokens.nextToken();
+							}catch (Exception q){
+								System.out.println("ERROR: Did not give " + 
+								    "arguement to RETR.");
+								toAdd = "ERROR: Did not give " + 
+								    "arguement to RETR.\n";
+							}
+							
+							// Attempt to retrieve file from selected user.
+							
+						}else if (firstToken.equals("quit")){
+							System.out.println("  DEBUG: Inside quit function.");
+							System.exit(0);
+						}else {
+							toAdd = "Invalid command!\n";
+						}
+					}
+				}else {
+					toAdd = "Not connected to server!\n";
+				}
+				commandHistory = commandHistory + toAdd;
+				ftpTextArea.setText(commandHistory);
+			}
+		});
 		btnGo.setFont(new Font("Dialog", Font.BOLD | Font.ITALIC, 12));
 		btnGo.setBounds(351, 10, 54, 17);
 		panelFTP.add(btnGo);
@@ -428,5 +518,36 @@ public class GUI {
 		JLabel lblFtp = new JLabel("FTP");
 		lblFtp.setBounds(12, 349, 70, 15);
 		frame.getContentPane().add(lblFtp);
+	}
+	
+	/*********************************************************************
+	* Connect is intended to set up a connection between host A and host B.
+	**********************************************************************/
+	private void connect(String ipAddress, String portNum){
+		 /* Connect to server's welcome socket */
+                try {
+                    controlSocket = new Socket(ipAddress, 
+                                         Integer.parseInt(portNum));
+                    boolean controlSocketOpen = true;
+                }catch(Exception p){
+                    System.out.println("ERROR: Did not find socket!");
+                }
+                                    
+                // Set-up the control-stream,
+                // if there's an error, report the non-connection.
+                try {
+                    inFromHost = 
+                       new Scanner(controlSocket.getInputStream());
+                    outToHost = 
+                       new PrintWriter(controlSocket.getOutputStream());
+                    isConnectedToOtherHost = true;
+                    System.out.println("Connected to client!");
+                    System.out.println(" ");
+                }
+                catch (Exception e) {
+                    System.out.println("ERROR: Did not connect to " +
+                        "client!");
+                    isConnectedToOtherHost = false;
+		}
 	}
 }
