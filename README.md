@@ -1,5 +1,7 @@
 # NapServerGVSU
 
+"The floor is Java!"
+
 ## Abstract
 
 This system implements a "Central Server" that connects multiple peers to share files among one another. It serves to list the available files to the connected users as well as to handle the file transfer with the peer that has the desired file.
@@ -190,14 +192,17 @@ __Server Requirements:__
 - Made text area on GUI display keyword search data.
 - Updated GUI and HostServer with Connect function; laid the framework for RETR and QUIT.
 
-### November 19, 2017
-
 **Matt** 
 - Finished the QUIT/disconnect function.
 
+**Brendon, Javier, Louis**
+- Added "retr" in the FTP commands.
+- Updated the "quit" function in the FTP command.
+- Added a "Disconnect" button which disconnects the client from the Central-Server.
+- Updated the keyword-search to return multiple files where multiple users have the same files.
+- GUI looks cooler
+
 **TO DO**
-1. Implement the FTP functions for RETR.
-2. Bug test the server recognizing two identical files of two different computers when searching for files by keyword. 
-3. Maaaaaaaybe validate the files from the XML document to actually exist (we had code for this from the last one).
-4. Maaaaaaaybe add more interesting sample-cases-- do this by downloading more images from sites described in "SampleUsers" folder, and then creating appropriate XML files. 
-5. Maaaaaaaybe have the GUI understand the "ENTER" key to search and to connect.
+1. Maaaaaaaybe validate the files from the XML document to actually exist (we had code for this from the last one).
+2. Maaaaaaaybe add more interesting sample-cases-- do this by downloading more images from sites described in "SampleUsers" folder, and then creating appropriate XML files. 
+3. Maaaaaaaybe have the GUI understand the "ENTER" key to search and to connect.
