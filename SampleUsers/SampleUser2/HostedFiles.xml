@@ -1,0 +1,28 @@
+<All_Files>
+
+    <File id="0001">  
+	<DisplayName>Oh No, Not Again</DisplayName>
+        <FileName>ohnonotagain.txt</FileName>
+        <Keywords>
+            <Key>Text</Key>
+            <Key>Comedy</Key>
+            <Key>Petuinias</Key>
+            <Key>Douglas Adams</Key>
+            <Key>Hitchhiker's Guide to the Galaxy</Key>
+       </Keywords>
+   </File>
+
+    <File id="0002">
+        <DisplayName>Answer to Life, the Universe, and Everything</DisplayName>
+        <FileName>fortytwo.txt</FileName>
+        <Keywords>
+            <Key>Text</Key>
+            <Key>Comedy</Key>
+            <Key>42</Key>
+            <Key>Answer to life, the universe, and everything</Key>
+            <Key>Douglas Adams</Key>
+            <Key>Hitchhiker's Guide to the Galaxy</Key>
+       </Keywords>
+   </File>
+
+</All_Files>
