@@ -1,14 +1,6 @@
 # NapServer - A Written Report
 
-## Rough Draft
-
-From the assignment:
-
-> The programs should be submitted in two formats, a paper version, and a compressed electronic version that contains all of your source codes. Email [the professor] the programs as an attachments at elsaidm@gvsu.edu
-
-> You must indicate the project completion percentage. The project completion percentage describes how complete is your project work and meets the requirements.
-
-His Example Report includes a simple UDP diagram that shows some interaction between the Central-Server and the Clients.
+Project completion percentage: 100%
 
 ## Napster Redesign
 
@@ -24,10 +16,6 @@ The follow are some critical notes on Napster, orginally "Rhapsody." Here's a qu
 
 More specifically this document serves to explain the functionality of the system with full detail. Our document will do this by (1) showing screen captures of example run-throughs, (2) having discussion of the basic logic of the system and its individual modules, and (3) further reflecting on issues found and resolved over the course of the project.
 
-## Design
-
-Image of UPD-Diagram Here!
-
 ## Features
 
 The following are notable features that we have implemented to this system:
@@ -36,6 +24,38 @@ The following are notable features that we have implemented to this system:
 - The Central-Server stores an ever-changing list of available files based on current connected users.
 - The connections between Central-Server and its Clients are setup to have full availability of error-handling (if desired in future updates, we could allow the Client-GUI to fully show disconnects and errors, number of connected users, total amount of available data).
 - The Client-GUI constrains the user to have a properly-named XML document.
+
+## Description of Classes
+
+```
+CentralServer
+```
+This class handles the full initiation of the server that handles multiple hosts connecting to be able to search for files. This is done with multithreading to be able to have concurrent connections. This class directs each new client to the ClientHandler Class to be handled more directly.
+
+```
+ClientHandler
+```
+This class, on the server-side, handles the commands taken from the client and manages the data on the main server.
+
+```
+GUI
+```
+This class is the intiated class to run the client program. It takes in user data and intiates the appropriate methods and instantiates the proper objects.
+
+```
+Host
+```
+This class manages, more directly, the internal methods that connect the client to the Central-Server. It also handles parsing the data sent-to and retrieved-from the central server.
+
+```
+HostedDescriptions
+```
+This class creates the main object on the Central-Server. It provides methods internally to handle new clients, leaving clients, and queries of available files.
+
+```
+HostServer
+```
+This class handles having each client also simultaneous acting as an FTP-server to other clients. This class is an extension of Thread for the sake of it running concurrently with the GUI. Within this class, it welcomes new connections to send those to their own threads as well.
 
 ## Problems and Resolution
 
