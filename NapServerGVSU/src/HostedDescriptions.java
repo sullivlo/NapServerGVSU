@@ -122,7 +122,8 @@ public class HostedDescriptions {
 				    
 				    /* If a file has this keeyword inside */
 				    if ( keywords.get(i).contains(currentToken) 
-					    && !grabbedFiles.contains(filenames.get(i)) ) {
+					    && !grabbedFiles.contains(filenames.get(i) + usernames.get(i)
+					    ) ) {
 						/* To build the string to send back */
 						/*stringToReturn = stringToReturn + " FILE " + usernames.get(i) + " " +
 						userIPs.get(i) + " " + userPorts.get(i) + " " + 
@@ -134,8 +135,13 @@ public class HostedDescriptions {
 						+ " " + filenames.get(i) 
 						+ " " + speeds.get(i);
 						
+						/* Allows for uniqueness of files with users */
+						String identifier = filenames.get(i) + usernames.get(i);
+						
 						/* For checking if the file was already appended */
-						grabbedFiles = grabbedFiles + " " + filenames.get(i);
+						grabbedFiles = grabbedFiles + " " + identifier;
+					    
+					    
 					    
 						/* For debugging */
 						System.out.println("  DEBUG-09: File has "

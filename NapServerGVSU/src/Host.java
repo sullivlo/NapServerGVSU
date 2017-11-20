@@ -39,6 +39,14 @@ public class Host {
 	@SuppressWarnings("resource")
     public static void main(String[] args) throws Exception {}
 	
+	public void disconnectFromServer() {
+	
+	    outToServer_Control.println("DISCONNECT");
+        outToServer_Control.flush();
+	
+	    isConnected = false;
+	}
+	
 	/**
 	 * This method, intiated by the GUI, handles connecting to the 
 	 * Central-Server. 

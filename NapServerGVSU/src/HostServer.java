@@ -193,6 +193,7 @@ class FTPClientHandler extends Thread {
 			//Try to get input from client
 			try {
 				recvMsg = inScanFromClient.nextLine();
+				System.out.println("RECEIVED MESSAGE: " + recvMsg);
 			} catch (Exception e) {
 				System.out.println("");
 				System.out.println("NO INPUT FROM CLIENT");
@@ -200,63 +201,85 @@ class FTPClientHandler extends Thread {
 			}
 			
 			StringTokenizer tokens = new StringTokenizer(recvMsg);
-			String currentToken = tokens.nextToken();
+			String commandToken = tokens.nextToken();
 			
-			if(currentToken.toLowerCase().equals("retr")) {
+			if(commandToken.toLowerCase().equals("retr")) {
+				
+				System.out.println("  DEBUG: Inside retrieve...");
+				
+				String dataPort = tokens.nextToken();
+				
+				System.out.println("  DEBUG: Dataport: " + dataPort);
+				
 				String fileName = tokens.nextToken();
-				File myFile = new File(fileName);
-				if (myFile.exists()) {
-					try {
-						/* Declare variables for converting 
-						    file to byte[] */
-						FileInputStream fileInputStream = 
-						    new FileInputStream(myFile);
-						byte[] fileByteArray = 
-						    new byte[(int) myFile.length()];
-						// Grabs file to memory to then be passed
-						fileInputStream.read(fileByteArray);
-						fileInputStream.close();
-
-						// Write to client over DATA line
-						outToClient.write(fileByteArray);
-						outToClient.flush();
-					} catch (Exception e) {
-						e.printStackTrace();
-						continue;
-					}
-				} else {
-					// Write error message to client over DATA line
-					String errMsg = new String("File does " +
-					    "not exist.");
-					
-					try {
-						outToClient.write(errMsg.getBytes());
-						System.out.println("Writing data.");
-					} catch (Exception e) {
-						System.out.println("ERROR: Input/out " +
-							    "stream failure.");
-						continue;
-					}
-					
-					try {
-						outToClient.flush();
-					} catch (Exception e) {
-						System.out.println("ERROR: Input/out " +
-							    "flush failure.");
-						continue;
-					}
-				}
+				
+				System.out.println("  DEBUG: Banana: " + dataPort + " " + fileName + " banana banana");
+				
+				InputStream inFromClient_Data;
+                OutputStream outToClient_Data;
 				try {
-					// Close after the data is written to client
-					controlListen.close();
-				} catch (Exception e) {
-					System.out.println("ERROR: Closing data" +
-							"-connection failure.");
-					continue;
+				    // Data connection socket
+                    dataConnection = new Socket(remoteIP,
+                            Integer.parseInt(dataPort));
+				    
+				    // Initiate data Input/Output streams
+                    inFromClient_Data = 
+                        dataConnection.getInputStream();
+                    outToClient_Data = 
+                        dataConnection.getOutputStream();
+                    System.out.println("Data line started.");
+				
+				    // MAGIC
+				    File myFile = new File(fileName);
+				    if (myFile.exists()) {
+					    try {
+						    /* Declare variables for converting 
+						        file to byte[] */
+						    FileInputStream fileInputStream = 
+						        new FileInputStream(myFile);
+						    byte[] fileByteArray = 
+						        new byte[(int) myFile.length()];
+						    // Grabs file to memory to then be passed
+						    fileInputStream.read(fileByteArray);
+						    fileInputStream.close();
+
+						    // Write to client over DATA line
+						    outToClient_Data.write(fileByteArray);
+						    outToClient_Data.flush();
+					    } catch (Exception e) {
+						    e.printStackTrace();
+					    }
+				    } else {
+					    // Write error message to client over DATA line
+					    String errMsg = new String("File does " +
+					        "not exist.");
+					
+					    try {
+						    outToClient.write(errMsg.getBytes());
+						    System.out.println("Writing data.");
+					    } catch (Exception e) {
+						    System.out.println("ERROR: Input/out " +
+							        "stream failure.");
+					    }
+					
+					    try {
+						    outToClient.flush();
+					    } catch (Exception e) {
+						    System.out.println("ERROR: Input/out " +
+							        "flush failure.");
+					    }
+				    }
+				
+				    // Close after the data is written to client
+					dataConnection.close();
+				
+				}
+				catch (Exception j) {
+				    System.out.println("  DEBUG: awful error...");
 				}
 			    
 			}
-			else if(currentToken.toLowerCase().equals("quit")) {
+			else if(commandToken.toLowerCase().equals("quit")) {
 				try {
 				    inScanFromClient = null;
 				    outToClient = null;

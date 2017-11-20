@@ -26,6 +26,7 @@ import java.io.*;
 
 /* For tokens */
 import java.util.*;
+import javax.swing.JTextArea;
 
 public class GUI {
 
@@ -88,13 +89,13 @@ public class GUI {
 	 */
 	private void initialize() {
 		frame = new JFrame();
-		frame.setBounds(100, 100, 451, 590);
+		frame.setBounds(100, 100, 451, 628);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		
 		JPanel panelConnection = new JPanel();
 		panelConnection.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
-		panelConnection.setBounds(12, 35, 415, 107);
+		panelConnection.setBounds(12, 28, 415, 120);
 		frame.getContentPane().add(panelConnection);
 		panelConnection.setLayout(null);
 		
@@ -226,7 +227,7 @@ public class GUI {
 			}
 		});
 		btnConnect.setFont(new Font("Dialog", Font.BOLD | Font.ITALIC, 12));
-		btnConnect.setBounds(254, 66, 149, 30);
+		btnConnect.setBounds(254, 66, 149, 19);
 		panelConnection.add(btnConnect);
 		
 		textFieldServerHostname = new JTextField();
@@ -254,21 +255,42 @@ public class GUI {
 		textFieldPort.setColumns(10);
 		
 		comboBoxSpeed = new JComboBox();
-		comboBoxSpeed.setModel(new DefaultComboBoxModel(new String[] {"Ethernet", "T1"}));
+		comboBoxSpeed.setModel(new DefaultComboBoxModel(new String[] {"Ethernet", "Broadband", "T1", "T3"}));
 		comboBoxSpeed.setFont(new Font("Dialog", Font.PLAIN, 12));
 		comboBoxSpeed.setBounds(301, 37, 99, 19);
 		panelConnection.add(comboBoxSpeed);
 		
+		JButton btnDisconnect = new JButton("Disconnect");
+		btnDisconnect.setBounds(254, 91, 149, 19);
+		panelConnection.add(btnDisconnect);
+		btnDisconnect.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			    /*
+			     Actions to happen on click of "Disconnect"
+			    */
+			    try {
+			        host.disconnectFromServer();
+			        
+			        /* Reset the boolean for connectedness */
+			        isConnectedToCentralServer = false;
+			    }
+			    catch (Exception h) {
+			        System.out.println("  ERROR: Failure in disconnect()...");
+			
+			    }
+			}
+		});
+		
 		JPanel panelSearch = new JPanel();
 		panelSearch.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
-		panelSearch.setBounds(12, 175, 415, 162);
+		panelSearch.setBounds(12, 212, 415, 162);
 		frame.getContentPane().add(panelSearch);
 		panelSearch.setLayout(null);
 		
 		TextArea keywordSearchArea = new TextArea();
+		keywordSearchArea.setEditable(false);
 		keywordSearchArea.setBounds(10, 31, 395, 121);
 		panelSearch.add(keywordSearchArea);
-		keywordSearchArea.setEditable(false);
 		
 		JLabel lblKeyword = new JLabel("Keyword:");
 		lblKeyword.setBounds(12, 10, 63, 15);
@@ -342,54 +364,54 @@ public class GUI {
 					keywordSearchArea.setText("No Found Matches...");
 				    }
 				    else if (firstToken.equals("FILE")) {
-					/* 
-					For each filedescription, for each row, on the
-					GUI. On each iteration in the while(), these 
-					values change.
-					*/
-					String tempUserPort = "";
-					String tempFileName = "";
-					String tempHostName = "";
-					String tempUserName = "";
-					String tempUserIP = "";
-					String tempSpeed = "";
-					String notUsed = "";
+					    /* 
+					    For each filedescription, for each row, on the
+					    GUI. On each iteration in the while(), these 
+					    values change.
+					    */
+					    String tempUserPort = "";
+					    String tempFileName = "";
+					    String tempHostName = "";
+					    String tempUserName = "";
+					    String tempUserIP = "";
+					    String tempSpeed = "";
+					    String notUsed = "";
 					
-					/* Could be a TRY CATCH problem */
-					try {
-					    while (tokens.hasMoreTokens()) {
-						// "Alice"
-						tempUserName = tokens.nextToken();
+					    /* Could be a TRY CATCH problem */
+					    try {
+					        while (tokens.hasMoreTokens()) {
+						    // "Alice"
+						    tempUserName = tokens.nextToken();
 					
-						// "127.1.1.2"
-						tempUserIP = tokens.nextToken();
-				    
-						// "1235"
-						tempUserPort = tokens.nextToken();
-					    
-						// "Apples.jpg"
-						tempFileName = tokens.nextToken();
+						    // "127.1.1.2"
+						    tempUserIP = tokens.nextToken();
+				        
+						    // "1235"
+						    tempUserPort = tokens.nextToken();
+					        
+						    // "Apples.jpg"
+						    tempFileName = tokens.nextToken();
 						
-						// "Ethernet"
-						tempSpeed = tokens.nextToken();
+						    // "Ethernet"
+						    tempSpeed = tokens.nextToken();
 						
-						stringForTextArea = stringForTextArea + "USERNAME: " 
-						    + tempUserName + "\nIP ADDRESS: " + tempUserIP 
-						    + "\nPORT NUMBER: " + tempUserPort 
-						    + "\nFILE NAME: " + tempFileName 
-						    + "\nSPEED: " + tempSpeed + "\n\n";
+						    stringForTextArea = stringForTextArea + "USERNAME: " 
+						        + tempUserName + "\nIP ADDRESS: " + tempUserIP 
+						        + "\nPORT NUMBER: " + tempUserPort 
+						        + "\nFILE NAME: " + tempFileName 
+						        + "\nSPEED: " + tempSpeed + "\n\n";
 						
-						// FILE
-						//notUsed = tokens.nextToken();
+						    // FILE
+						    //notUsed = tokens.nextToken();
+					        }
 					    }
-					}
-					catch (Exception h) {
-					    System.out.println("  DEBUG: while() threw an error!");
-					}
+					    catch (Exception h) {
+					        System.out.println("  DEBUG: while() threw an error!");
+					    }
 					
-					stringForTextArea = stringForTextArea + "End of search list.";
-					keywordSearchArea.setText(stringForTextArea);
-				    }
+					    stringForTextArea = stringForTextArea + "End of search list.";
+					    keywordSearchArea.setText(stringForTextArea);
+				        }
 			        }
 			        else {
 			            /* For debugging */
@@ -409,7 +431,7 @@ public class GUI {
 		
 		JPanel panelFTP = new JPanel();
 		panelFTP.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
-		panelFTP.setBounds(12, 364, 415, 181);
+		panelFTP.setBounds(12, 405, 415, 181);
 		frame.getContentPane().add(panelFTP);
 		panelFTP.setLayout(null);
 		
@@ -475,12 +497,108 @@ public class GUI {
 								+ " to server!\n";
 							}
 							
-						}else if (firstToken.equals("retr")){
+						}
+						else if (firstToken.equals("retr")){
 							System.out.println("  DEBUG: Inside retr function.");
 							
 							try {
+							
 								String fileName = cmdTokens.nextToken();
-							}catch (Exception q){
+								
+			/*************************************************************/	
+		                        
+		                        /* This socket is the "Welcome socket" for the data-link */
+                                ServerSocket dataListen; 
+		                        /* This socket handles data-links with the server */
+                                Socket dataConnection = null;
+                                /* This value handles the file transfer */
+                                int recvMsgSize;
+		                        /* For sending and retrieving file */
+                                byte[] byteBuffer = new byte[32768];
+		                        
+		                        int dataPort = 1240;
+		                        
+								try {
+                                    /* Send the request over the control line */
+                                    String toSend = "RETR" + " " + dataPort + " " + fileName;       
+                                        
+                                    System.out.println("  DEBUG: A");
+                                    System.out.println("  DEBUG: Dataport: " + dataPort + " Filename: " + fileName);
+                                    
+                                        
+                                    outToHost.println(toSend);
+                                    outToHost.flush();
+                                    
+                                    System.out.println("  DEBUG: B");
+                                    
+                                    /* Connect to server and establish variables */
+                                    dataListen = new ServerSocket(dataPort);
+                                    
+                                    System.out.println("  DEBUG: C");
+                                    
+                                    dataConnection = dataListen.accept();
+                                    InputStream inFromServer_Data = 
+                                        dataConnection.getInputStream();   
+
+
+                                    System.out.println("  DEBUG: D");                               
+                                    
+                                    
+                                    /* Below this handles sending the file itself */
+                                    String fileRequestedString = 
+                                        new String(fileName.getBytes());
+                                    while ((recvMsgSize = 
+                                            inFromServer_Data.read(byteBuffer)) != -1) {
+                                        try {
+                                            File fileRequested = 
+                                                new File(fileRequestedString);
+                                            FileOutputStream fileOutputStream = 
+                                                new FileOutputStream(fileRequested);
+
+                                            fileOutputStream.write(byteBuffer, 
+                                                                        0, recvMsgSize);
+                                            fileOutputStream.close();
+                                            
+                                            Scanner scanner = new Scanner(fileRequested);
+                                            String errorCheck = scanner.nextLine();
+                                            if(errorCheck.equals(
+                                                              "File does not exist.")) { 
+                                                System.out.println(
+                                                  "File does not exist.");
+                                                fileRequested.delete();
+                                            } else {
+                                                System.out.println("File retrieved!");
+                                            }
+                                        } catch (Exception f) {
+                                            System.out.println("Error trying to " + 
+                                             "retrieve file.");
+                                        }
+                                    }
+                                    
+                                    System.out.println("  DEBUG: E");
+                                    
+                                    /* Close the data connection */
+                                    try {
+                                        dataListen.close();
+                                        dataConnection.close();
+                                    } catch (Exception h) {
+                                        System.out.println("ERROR: Could not close data" +
+                                            " connection");
+                                    }
+                
+                                } catch (Exception g) {
+                                    System.out.println("ERROR: Failure in " + 
+                                        "file retrieval.");
+                                }
+                                
+                                System.out.println("  DEBUG: F");
+								
+						/*************************************************/		
+								
+								
+								
+							}
+							catch (Exception q) {
 								System.out.println("ERROR: Did not give " + 
 								    "arguement to RETR.");
 								toAdd = "ERROR: Did not give " + 
@@ -489,7 +607,8 @@ public class GUI {
 							
 							// Attempt to retrieve file from selected user.
 							
-						}else if (firstToken.equals("quit")){
+						}
+						else if (firstToken.equals("quit")){
 							System.out.println("  DEBUG: Inside quit function.");
 							if (isConnectedToOtherHost != false){
 								disconnect();
@@ -519,16 +638,30 @@ public class GUI {
 		panelFTP.add(btnGo);
 		
 		JLabel lblConnection = new JLabel("Connection");
-		lblConnection.setBounds(12, 22, 80, 15);
+		lblConnection.setBounds(12, 12, 80, 15);
 		frame.getContentPane().add(lblConnection);
 		
 		JLabel lblSearch = new JLabel("Search");
-		lblSearch.setBounds(12, 161, 70, 15);
+		lblSearch.setBounds(12, 193, 70, 15);
 		frame.getContentPane().add(lblSearch);
 		
 		JLabel lblFtp = new JLabel("FTP");
-		lblFtp.setBounds(12, 349, 70, 15);
+		lblFtp.setBounds(12, 386, 70, 15);
 		frame.getContentPane().add(lblFtp);
+		
+		JPanel panel = new JPanel();
+		panel.setBorder(new LineBorder(new Color(0, 0, 0)));
+		panel.setBounds(12, 154, 415, 34);
+		frame.getContentPane().add(panel);
+		panel.setLayout(null);
+		
+		JTextArea errorTextArea = new JTextArea();
+		errorTextArea.setFont(new Font("Dialog", Font.BOLD | Font.ITALIC, 12));
+		errorTextArea.setBackground(Color.WHITE);
+		errorTextArea.setBounds(12, 4, 400, 22);
+		errorTextArea.setEditable(false);
+		errorTextArea.setText("Error Messages will show here");
+		panel.add(errorTextArea);
 	}
 	
 	/*********************************************************************
@@ -564,7 +697,7 @@ public class GUI {
 	
 	private void disconnect(){
 		 /* Disconnect from server's welcome socket */
-                outToHost.write("quit");
+        outToHost.println("quit");
 		outToHost.flush();
 		
 		boolean controlSocketOpen = false;

@@ -357,6 +357,23 @@ public class ClientHandler extends Thread{
             else if (commandFromClient.equals("UPDATE")) {
                 System.out.println("Ran Command: UPDATE");
             }
+            else if (commandFromClient.equals("DISCONNECT")) {
+                System.out.println("Ran Command: DISCONNECT");
+                
+                /* Client left early, or otherwise */
+                System.out.println("Client " + UserName + " [" + remoteIP + "] left!");
+                
+                /* Remove all rows with this username */
+                allHostedDescriptions.remove(UserName);
+                
+                /* Show the server data on user-leave */
+                System.out.println(" ");
+                allHostedDescriptions.showData();
+                System.out.println(" ");
+                
+                break;
+            }
+            
             
             /* For server log printing */
             System.out.println(" ");
