@@ -423,6 +423,7 @@ public class GUI {
 			        /* For debugging */
 			        System.out.println("  DEBUG-08: No current keyword. Did not send request!");
 			    }
+			    keywordSearchField.setText("");
 			}
 		});
 		btnSearch.setBounds(313, 6, 90, 19);
@@ -581,6 +582,7 @@ public class GUI {
                                     try {
                                         dataListen.close();
                                         dataConnection.close();
+                                        toAdd = "File " + fileName + " retrieved!\n";
                                     } catch (Exception h) {
                                         System.out.println("ERROR: Could not close data" +
                                             " connection");
@@ -631,6 +633,7 @@ public class GUI {
 				}
 				commandHistory = commandHistory + toAdd;
 				ftpTextArea.setText(commandHistory);
+				ftpCommandField.setText("");
 			}
 		});
 		btnGo.setFont(new Font("Dialog", Font.BOLD | Font.ITALIC, 12));
@@ -697,7 +700,7 @@ public class GUI {
 	
 	private void disconnect(){
 		 /* Disconnect from server's welcome socket */
-        outToHost.println("quit");
+		outToHost.println("quit");
 		outToHost.flush();
 		
 		boolean controlSocketOpen = false;

@@ -216,68 +216,67 @@ class FTPClientHandler extends Thread {
 				System.out.println("  DEBUG: Banana: " + dataPort + " " + fileName + " banana banana");
 				
 				InputStream inFromClient_Data;
-                OutputStream outToClient_Data;
+				OutputStream outToClient_Data;
 				try {
-				    // Data connection socket
-                    dataConnection = new Socket(remoteIP,
-                            Integer.parseInt(dataPort));
-				    
-				    // Initiate data Input/Output streams
-                    inFromClient_Data = 
-                        dataConnection.getInputStream();
-                    outToClient_Data = 
-                        dataConnection.getOutputStream();
-                    System.out.println("Data line started.");
+					// Data connection socket
+					dataConnection = new Socket(remoteIP,
+					Integer.parseInt(dataPort));
+							
+					// Initiate data Input/Output streams
+					inFromClient_Data = 
+					    dataConnection.getInputStream();
+					outToClient_Data = 
+					    dataConnection.getOutputStream();
+					System.out.println("Data line started.");
 				
-				    // MAGIC
-				    File myFile = new File(fileName);
-				    if (myFile.exists()) {
-					    try {
-						    /* Declare variables for converting 
-						        file to byte[] */
-						    FileInputStream fileInputStream = 
-						        new FileInputStream(myFile);
-						    byte[] fileByteArray = 
-						        new byte[(int) myFile.length()];
-						    // Grabs file to memory to then be passed
-						    fileInputStream.read(fileByteArray);
-						    fileInputStream.close();
+					// MAGIC
+					File myFile = new File(fileName);
+					if (myFile.exists()) {
+						try {
+							/* Declare variables for converting 
+							    file to byte[] */
+							FileInputStream fileInputStream = 
+							    new FileInputStream(myFile);
+							byte[] fileByteArray = 
+							    new byte[(int) myFile.length()];
+							// Grabs file to memory to then be passed
+							fileInputStream.read(fileByteArray);
+							fileInputStream.close();
 
-						    // Write to client over DATA line
-						    outToClient_Data.write(fileByteArray);
-						    outToClient_Data.flush();
-					    } catch (Exception e) {
-						    e.printStackTrace();
-					    }
-				    } else {
-					    // Write error message to client over DATA line
-					    String errMsg = new String("File does " +
-					        "not exist.");
-					
-					    try {
-						    outToClient.write(errMsg.getBytes());
-						    System.out.println("Writing data.");
-					    } catch (Exception e) {
-						    System.out.println("ERROR: Input/out " +
-							        "stream failure.");
-					    }
-					
-					    try {
-						    outToClient.flush();
-					    } catch (Exception e) {
-						    System.out.println("ERROR: Input/out " +
-							        "flush failure.");
-					    }
-				    }
+							// Write to client over DATA line
+							outToClient_Data.write(fileByteArray);
+							outToClient_Data.flush();
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					} else {
+						// Write error message to client over DATA line
+						String errMsg = new String("File does " +
+						    "not exist.");
+					    
+						try {
+							outToClient.write(errMsg.getBytes());
+							System.out.println("Writing data.");
+						} catch (Exception e) {
+							System.out.println("ERROR: Input/out " +
+								    "stream failure.");
+						}
+					    
+						try {
+							outToClient.flush();
+							System.out.println("Data sent.");
+						} catch (Exception e) {
+							System.out.println("ERROR: Input/out " +
+								    "flush failure.");
+						}
+					}
 				
-				    // Close after the data is written to client
+					// Close after the data is written to client
 					dataConnection.close();
-				
 				}
 				catch (Exception j) {
 				    System.out.println("  DEBUG: awful error...");
 				}
-			    
 			}
 			else if(commandToken.toLowerCase().equals("quit")) {
 				try {
