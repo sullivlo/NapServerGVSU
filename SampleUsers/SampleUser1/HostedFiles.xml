@@ -1,0 +1,27 @@
+<All_Files>
+
+    <File id="0001">  
+        <DisplayName>Answer to Life</DisplayName>
+        <FileName>philosophy.txt</FileName>
+        <Keywords>
+            <Key>Text</Key>
+            <Key>Comedy</Key>
+            <Key>Philosophy</Key>
+            <Key>Douglas Adams</Key>
+            <Key>Hitchhiker's Guide to the Galaxy</Key>
+       </Keywords>
+   </File>
+
+    <File id="0002">
+        <DisplayName>Hitchhiker's History of the World</DisplayName>
+        <FileName>theearth.txt</FileName>
+        <Keywords>
+            <Key>Text</Key>
+            <Key>Comedy</Key>
+            <Key>Earth</Key>
+            <Key>Douglas Adams</Key>
+            <Key>Hitchhiker's Guide to the Galaxy</Key>
+       </Keywords>
+   </File>
+
+</All_Files>
