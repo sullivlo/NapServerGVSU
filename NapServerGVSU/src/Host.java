@@ -9,6 +9,12 @@ import org.w3c.dom.NodeList;
 import org.w3c.dom.Node;
 import org.w3c.dom.Element;
 
+/***********************************************************************
+This class handles the main client-side functions that interact with 
+the Central-Server 
+
+
+***********************************************************************/
 
 public class Host {
 	
@@ -17,19 +23,25 @@ public class Host {
 	
 	/* Central-Server's IP */
 	private String serverHostname;
+	
 	/* Central-Server's Port */
 	private String port;
+	
 	/* User's username */
 	private String username;
+	
 	/* User's name of computer... and IP */
 	private String hostname;
+	
 	/* User's submitted internet speed */
 	private String speed;
+	
 	/* User's FTP port for others to connect to for downloading */
 	private String hostFTPWelcomePort;
 	
     /* This handles the control-line out stream */
     PrintWriter outToServer_Control = null;
+    
     /* This handles the control-line input stream */
     Scanner inFromServer_Control = null;
 	
@@ -56,9 +68,10 @@ public class Host {
 	 * @param username
 	 * @param hostname
 	 */
-	public int connectToServer(String serverHostname, String port, 
+	public int connectToServer( String serverHostname, String port, 
 	                            String username, String hostname, 
-	                            String speed, String hostFTPWelcomePort) {
+	                            String speed, 
+	                            String hostFTPWelcomePort) {
 	                            
 		/* Taking the parameters from the GUI */
 		this.serverHostname = serverHostname;
@@ -67,16 +80,15 @@ public class Host {
 		this.hostname = hostname;
 		this.speed = speed;
 		this.hostFTPWelcomePort = hostFTPWelcomePort;
-	    
+		
 	    /* This socket handles communicating main commands to server */
 	    Socket controlSocket = null;	    
-
+	    
 	    /* To catch if there was errors. Limits sending. */
 	    boolean hadConnectErrors = false;
 	    
 	    /* Only DO connect if NOT already connected */
-	    if (isConnected == false){
-	    	
+	    if (isConnected == false) {
 	    	/* Establish a TCP connection with the server */
 		    try {
 		        controlSocket = new Socket(serverHostname, 
@@ -223,27 +235,34 @@ public class Host {
 		            recvMsg = inFromServer_Control.nextLine();
 		            
 		            if (recvMsg.equals("GOOD-USERNAME")) {
+		                
 		                /* For debugging */
-                        System.out.println("  DEBUG: Good username!");
+                        //System.out.println("  DEBUG: Good username!");
+                        
                         isConnected = true;
 		                return (1);
 		            }
 		            else if (recvMsg.equals("BAD-USERNAME")) {
+		                
 		                /* For debugging */
-                        System.out.println("  DEBUG: Bad username!");
+                        // System.out.println("  DEBUG: Bad username!");
+                        
                         isConnected = false;
 		                return (-2);
 		            }
 		            else {
+		                
 		                /* For debugging */
-                        System.out.println("  DEBUG: Corrupted response from server!");
+                        // System.out.println("  DEBUG: Corrupted response from server!");
                         isConnected = false;
 		                return (-3);
 		            }
                 } 
                 catch (Exception e) {
+                    
                     /* For debugging */
-                    System.out.println("  DEBUG: Failed response from server!");
+                    // System.out.println("  DEBUG: Failed response from server!");
+                    
                     isConnected = false;
                     return (-4);
                 }
@@ -316,7 +335,9 @@ public class Host {
 	try {
 		String recvMsg;
 		recvMsg = inFromServer_Control.nextLine();
-		System.out.println("  DEBUG: Received message: " + recvMsg);
+		
+		/* For debugging */
+		// System.out.println("  DEBUG: Received message: " + recvMsg);
 		    
 		return (recvMsg);
 		    

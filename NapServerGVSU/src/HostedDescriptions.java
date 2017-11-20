@@ -89,7 +89,7 @@ public class HostedDescriptions {
 	    if (numberOfUsers != 0) {
 	        System.out.println(" Total Files Represented: " + usernames.size() );	    
             System.out.print(" List of Files: \n");
-            System.out.println(" [Username, IP-Address, FTP-Port-Num, Speed, Image]");
+            System.out.println(" [Username, IP-Address, FTP-Port-Num, Speed, Filename]");
             for(int k = 0; k < filenames.size(); k++) {
                 System.out.print(" [" + usernames.get(k) + ", " + userIPs.get(k) + ", " + userPorts.get(k) + ", " + speeds.get(k) + ", " + filenames.get(k) + "] \n");
             }
@@ -144,9 +144,9 @@ public class HostedDescriptions {
 					    
 					    
 						/* For debugging */
-						System.out.println("  DEBUG-09: File has "
-						+ "key (" + currentToken + "): " 
-						+ filenames.get(i) );
+						// System.out.println("  DEBUG-09: File has "
+						// + "key (" + currentToken + "): " 
+						// + filenames.get(i) );
 				    }
 				}
 			}catch (Exception e) {

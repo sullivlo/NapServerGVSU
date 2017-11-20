@@ -107,7 +107,7 @@ public class ClientHandler extends Thread{
             
             /* If username taken, throw error, return a message, and stop thread. */
         	if (allHostedDescriptions.isUsernameTaken(UserName)) {
-                System.out.println("  ERROR-02: \""+ UserName + "\" [" + remoteIP + "] must" +
+                System.out.println("  ERROR: \""+ UserName + "\" [" + remoteIP + "] must" +
                                    " pick another username to connect!");
                                    
                 /* Send notification to client to rechoose a username */
@@ -123,7 +123,7 @@ public class ClientHandler extends Thread{
                 outToClient.flush();
         	}
             
-            System.out.println("Username: " + UserName);
+            System.out.println(" Username: " + UserName);
                      
             /* 
              TODO - Change UserHostName
@@ -140,18 +140,18 @@ public class ClientHandler extends Thread{
             /* Initialize and display the new user's hostname and IP */
             UserHostName = userTokens.nextToken();
             UserHostName = UserHostName.replaceAll("@@", " ");
-            System.out.println("UserHostname: " + UserHostName);
+            System.out.println(" UserHostname: " + UserHostName);
 
             /* Initialize and display the new user's speed */
             UserSpeed = userTokens.nextToken();
-            System.out.println("UserSpeed: " + UserSpeed); 
+            System.out.println(" UserSpeed: " + UserSpeed); 
 
             /* Display new user's IP */
-            System.out.println("IP-Address: " + remoteIP);
+            System.out.println(" IP-Address: " + remoteIP);
             
             /* Display new user's FTP Welcome Port */
             UserFTPWelcomePort = userTokens.nextToken();
-            System.out.println("FTP-Welcome-Port: " + UserFTPWelcomePort);
+            System.out.println(" FTP-Welcome-Port: " + UserFTPWelcomePort);
         	 
             /* Variables used in parsing the crazy string */
             String tmp_a_Token, tmpFilename, tmp_c_Token;
@@ -163,7 +163,7 @@ public class ClientHandler extends Thread{
             }
             catch (Exception e) {
                 /* There seems to be no uploads from this user */
-                System.out.println("  DEBUG-06: No uploads from user.");
+                // System.out.println("  DEBUG: No uploads from user.");
             }
             
             String tmpKeywordList = "";
@@ -211,17 +211,17 @@ public class ClientHandler extends Thread{
              Once the file-descriptions are parsed, display a success 
              report of number of uploads to output on the server.
              */
-            System.out.println("Number-of-Uploaded-Files: " + numberOfFilesDescriptions);
+            System.out.println(" Number-of-Uploaded-Files: " + numberOfFilesDescriptions);
              
         } catch (Exception e) {
             /* Host did not supply user information  */
-            System.out.println("  ERROR-04: Host did not supply valid information");
+            System.out.println("  ERROR: Host did not supply valid information");
             endThread = true;
         }
         
         /* End the thread */
         if (endThread == true) {
-            System.out.println("  ERROR-03: Ending user's thread");
+            System.out.println("  ERROR: Ending user's thread");
             
             /* Remove all rows with this username */
             allHostedDescriptions.remove(UserName);
@@ -318,7 +318,7 @@ public class ClientHandler extends Thread{
                 /* Was there a token error? */
                 
                     /* For debugging */
-                    System.out.println(" DEBUG-07: End of Parsing Tokens");
+                    // System.out.println(" DEBUG: End of Parsing Tokens");
                 }
 	        
 	        /* End of hasMoreTokens loop */    
@@ -337,7 +337,7 @@ public class ClientHandler extends Thread{
                 stayAlive = false;
             }
             else if (commandFromClient.equals("KEYWORD")) {
-                System.out.println("Ran Command: KEYWORD:" + totalKeys);
+                System.out.println(" Ran Command: KEYWORD:" + totalKeys);
                 
                 /* 
                  HERE, do the methods for figuring which things to send 
@@ -350,18 +350,19 @@ public class ClientHandler extends Thread{
                 
                 /* Send the query to the server! */
                 outToClient.println(toSendToClient);
-		outToClient.flush();
+		        outToClient.flush();
                 
-                System.out.println("  DEBUG: Succesfully Sent: " + toSendToClient);
+                /* For debugging */
+                // System.out.println("  DEBUG: Succesfully Sent: " + toSendToClient);
             }
             else if (commandFromClient.equals("UPDATE")) {
-                System.out.println("Ran Command: UPDATE");
+                System.out.println(" Ran Command: UPDATE");
             }
             else if (commandFromClient.equals("DISCONNECT")) {
-                System.out.println("Ran Command: DISCONNECT");
+                System.out.println(" Ran Command: DISCONNECT");
                 
                 /* Client left early, or otherwise */
-                System.out.println("Client " + UserName + " [" + remoteIP + "] left!");
+                System.out.println(" Client successfully disconnected!");
                 
                 /* Remove all rows with this username */
                 allHostedDescriptions.remove(UserName);

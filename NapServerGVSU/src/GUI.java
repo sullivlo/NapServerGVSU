@@ -30,6 +30,7 @@ import javax.swing.JTextArea;
 
 public class GUI {
 
+    /* Lots of GUI setup */
 	private JFrame frame;
 	private JTextField textFieldServerHostname;
 	private JTextField textFieldUsername;
@@ -39,20 +40,28 @@ public class GUI {
 	private JTextField ftpCommandField;
 	private JComboBox comboBoxSpeed;
 	
+	/* Initializing helper variables to empty */
 	private String commandHistory = "";
 	private String ipAddress = "";
 	private String portNum = "";
 	
+	/** This handles connection to the Central-Server */
 	private Host host = new Host();
+	
+	/** This handles client being server to other FTP-connections */
 	private HostServer hostServer;
+	
+	/** This allows for FTP-connection with another host */
 	private Socket controlSocket;
+	
+	/** Stores whether the user is currently connected to a host */
 	private boolean isConnectedToOtherHost = false;
 	
 	/* This handles the control-line out stream */
-        PrintWriter outToHost = null;
+    PrintWriter outToHost = null;
         
-        /* This handles the control-line in stream */
-        Scanner inFromHost = null;
+    /* This handles the control-line in stream */
+    Scanner inFromHost = null;
 	
 	/* This is used as a helper in initial connection to Central-Server */
 	private String hostFTPWelcomeport;
@@ -304,128 +313,141 @@ public class GUI {
 		
 		JButton btnSearch = new JButton("Search");
 		btnSearch.addActionListener(new ActionListener() {
+		
+			/* The following occurs upon click of "Search" */
 			public void actionPerformed(ActionEvent e) {
-			/*
-			 Actions to happen on click of "Search"
-			*/
+			
 			    String keySearch = keywordSearchField.getText();
 			
 			    if(!keySearch.equals("")) {
 			    
-			        if (alreadySetupFTPServer == true && isConnectedToCentralServer == true) {
+			        if (alreadySetupFTPServer == true && 
+			            isConnectedToCentralServer == true) {
+			            
 			            /* This may hold values to paste to GUI boxes */
 			            String results;
-			        
-			            /* 
-			             TODO - have this function return the values so that
-			             we can use them to generate GUI boxes. For now, let's
-			             debug issues and get halfway there. 
-			            */
 			            
 			            /* Query the server for the User's string of keywords */
 			            String returnedFileData = host.queryKeywords(keySearch);
-			            
-				    //String messageToPrint = returnedFileData.replaceAll("*", "\n");
 
-				    /* For debugging */
-				    keywordSearchArea.setText( returnedFileData );
-				    
-				    /* For initial textarea */
-				    keywordSearchArea.setText("");
-				    
-				    String stringForTextArea = "";
-				    
-				    /* This contains all the FILES as tokens to be parsed */
-				    StringTokenizer tokens = new StringTokenizer(returnedFileData);	
-		
-				    /* 
-				    If there was no files == "NOFOUNDMATCHES"
-				    If there was files == "FILE"
-				    If there was error == "ERROR"
-				    */
-				    String firstToken = "";
-				    try {
-					firstToken = tokens.nextToken();
-				    }
-				    catch (Exception g) {
-					System.out.println("  DEBUG: First token threw error!");
-				    }
-				    
-				    String currentToken;
-				    if (firstToken.equals("ERROR")) {
-					System.out.println("  DEBUG-10: Error in parsing the returned string!");              
-					/* Print in GUI "There was an error, try again..." */
-					keywordSearchArea.setText("There was an error...");
-				    }
-				    else if (firstToken.equals("NOFOUNDMATCHES")) {
-					System.out.println("  DEBUG-11: No found matches!");
-				    
-					/* Print in GUI "no matches" */
-					keywordSearchArea.setText("No Found Matches...");
-				    }
-				    else if (firstToken.equals("FILE")) {
-					    /* 
-					    For each filedescription, for each row, on the
-					    GUI. On each iteration in the while(), these 
-					    values change.
-					    */
-					    String tempUserPort = "";
-					    String tempFileName = "";
-					    String tempHostName = "";
-					    String tempUserName = "";
-					    String tempUserIP = "";
-					    String tempSpeed = "";
-					    String notUsed = "";
-					
-					    /* Could be a TRY CATCH problem */
-					    try {
-					        while (tokens.hasMoreTokens()) {
-						    // "Alice"
-						    tempUserName = tokens.nextToken();
-					
-						    // "127.1.1.2"
-						    tempUserIP = tokens.nextToken();
+				        /* For debugging */
+				        keywordSearchArea.setText( returnedFileData );
 				        
-						    // "1235"
-						    tempUserPort = tokens.nextToken();
-					        
-						    // "Apples.jpg"
-						    tempFileName = tokens.nextToken();
-						
-						    // "Ethernet"
-						    tempSpeed = tokens.nextToken();
-						
-						    stringForTextArea = stringForTextArea + "USERNAME: " 
-						        + tempUserName + "\nIP ADDRESS: " + tempUserIP 
-						        + "\nPORT NUMBER: " + tempUserPort 
-						        + "\nFILE NAME: " + tempFileName 
-						        + "\nSPEED: " + tempSpeed + "\n\n";
-						
-						    // FILE
-						    //notUsed = tokens.nextToken();
-					        }
-					    }
-					    catch (Exception h) {
-					        System.out.println("  DEBUG: while() threw an error!");
-					    }
-					
-					    stringForTextArea = stringForTextArea + "End of search list.";
-					    keywordSearchArea.setText(stringForTextArea);
+				        /* For initial textarea */
+				        keywordSearchArea.setText("");
+				        
+				        String stringForTextArea = "";
+				        
+				        /* This contains all the FILES as tokens to be parsed */
+				        StringTokenizer tokens = new StringTokenizer(returnedFileData);	
+		
+				        /* 
+				        If there was no files == "NOFOUNDMATCHES"
+				        If there was files == "FILE"
+				        If there was error == "ERROR"
+				        */
+				        String firstToken = "";
+				        try {
+					    firstToken = tokens.nextToken();
 				        }
-			        }
-			        else {
-			            /* For debugging */
-			            System.out.println("  DEBUG-04: User not connected to Central-Server!");
-			        }
-			    
-			    }
-			    else {
-			        /* For debugging */
-			        System.out.println("  DEBUG-08: No current keyword. Did not send request!");
-			    }
-			    keywordSearchField.setText("");
-			}
-		});
+				        catch (Exception g) {
+					    System.out.println("  DEBUG: First token threw error!");
+				        }
+				        
+				        String currentToken;
+				        if (firstToken.equals("ERROR")) {
+					    System.out.println("  DEBUG-10: Error in parsing the returned string!");              
+					    /* Print in GUI "There was an error, try again..." */
+					    keywordSearchArea.setText("There was an error...");
+				        }
+				        else if (firstToken.equals("NOFOUNDMATCHES")) {
+					    
+					    /* For debugging */
+					    // System.out.println("  DEBUG: No found matches!");
+				        
+					    /* Print in GUI "no matches" */
+					    keywordSearchArea.setText("No Found Matches...");
+				        }
+				        else if (firstToken.equals("FILE")) {
+					        /* 
+					        For each filedescription, for each row, on the
+					        GUI. On each iteration in the while(), these 
+					        values change.
+					        */
+					        String tempUserPort = "";
+					        String tempFileName = "";
+					        String tempHostName = "";
+					        String tempUserName = "";
+					        String tempUserIP = "";
+					        String tempSpeed = "";
+					        String notUsed = "";
+					
+					        /* Could be a TRY CATCH problem */
+					        try {
+					            while (tokens.hasMoreTokens()) {
+						        // "Alice"
+						        tempUserName = tokens.nextToken();
+					
+						        // "127.1.1.2"
+						        tempUserIP = tokens.nextToken();
+				            
+						        // "1235"
+						        tempUserPort = tokens.nextToken();
+					            
+						        // "Apples.jpg"
+						        tempFileName = tokens.nextToken();
+						
+						        // "Ethernet"
+						        tempSpeed = tokens.nextToken();
+						        
+						        /* Bandaid of an issue in the GUI */  
+						        tempSpeed 
+						         = tempSpeed.replaceAll("FILE","");
+						
+						        stringForTextArea = stringForTextArea 
+						            + "USERNAME: " 
+						            + tempUserName + "\nIP ADDRESS: "
+						            + tempUserIP + " " + tempUserPort 
+						            + "\nFILE NAME: " + tempFileName 
+						            + "\nSPEED: " + tempSpeed + "\n\n";
+						
+						        // FILE - NOT USED, maybe should be...
+						        // notUsed = tokens.nextToken();
+						        
+					            }
+					        }
+					        catch (Exception h) {
+					            System.out.println("  ERROR: while() threw an error!");
+					        }
+					        
+					        stringForTextArea = stringForTextArea + 
+					                            "End of search list.";
+					        keywordSearchArea.setText(stringForTextArea);
+				        }
+				    
+				    /* End of if-server-is-connected */
+		            }
+		            else {
+		            
+		                /* For debugging */
+		                // System.out.println("  DEBUG-04: User not " + 
+		                //              "connected to Central-Server!");
+		            }
+		        
+		        /* End of if-user-typed-anything */
+		        }
+		        else {
+		        
+		            /* For debugging */
+		            // System.out.println("  DEBUG: No current keyword. " +
+		            //                 "Did not send request!");
+		        }
+		    
+		    keywordSearchField.setText("");
+		    
+		    }
+	    });
+	    
 		btnSearch.setBounds(313, 6, 90, 19);
 		btnSearch.setFont(new Font("Dialog", Font.BOLD | Font.ITALIC, 12));
 		panelSearch.add(btnSearch);
@@ -453,96 +475,102 @@ public class GUI {
 		
 		JButton btnGo = new JButton("Go");
 		btnGo.addActionListener(new ActionListener() {
+		
+			/* These actions are performed on the click of "Go" */
 			public void actionPerformed(ActionEvent e) {
-				/*
-				Actions to happen on click of "Search"
-				*/
+				
 				String toAdd = "";
 				
-				if (alreadySetupFTPServer == true && isConnectedToCentralServer == true) {
+				if (alreadySetupFTPServer == true 
+				    && isConnectedToCentralServer == true) {
+				    
 					String commandLine = ftpCommandField.getText();
-					commandHistory = commandHistory + ">>> " + commandLine + "\n";
+					commandHistory = commandHistory + ">>> " 
+					 + commandLine + "\n";
 					ftpTextArea.setText(commandHistory);
 					
-					StringTokenizer cmdTokens = new StringTokenizer(commandLine);
+					StringTokenizer cmdTokens 
+					 = new StringTokenizer(commandLine);
 					String firstToken = cmdTokens.nextToken();
 					firstToken = firstToken.toLowerCase();
 					
 					if(!firstToken.equals("")) {
 						if (firstToken.equals("connect")){
-							System.out.println("  DEBUG: Inside connect function.");
 							
+							/* For debugging */
+							// System.out.println("  DEBUG: Inside " 
+							//  + "connect function.");
+							
+							/* Grabbing the data from the typing */
 							try {
 								ipAddress = cmdTokens.nextToken();
 								portNum = cmdTokens.nextToken();
 								
 								toAdd = "Connecting to " + ipAddress +
 								    " on port " + portNum + "\n";
-							}catch (Exception q){
-								System.out.println("ERROR: Improper or invalid " +
-								    "arguments!");
-								toAdd = "ERROR: Improper or invalid " +
-								    "arguments!\n";
+							} 
+							catch (Exception q) {
+								System.out.println("ERROR: Improper " 
+								 + "or invalid arguments!");
+								toAdd = "ERROR: Improper or invalid " 
+								 + "arguments!\n";
 							}
 							
-							//Connect to other user's HostServer.
-							try{
+							/* Connect to other user's HostServer */
+							try {
 								connect(ipAddress, portNum);
 								toAdd = "Connected to " + ipAddress 
 								+ " on port " + portNum + "!\n";
 								
-							}catch (Exception q){
-								System.out.println("ERROR: Failed to connect"
-								+ " to server!");
+							}
+							catch (Exception q) {
+								System.out.println("ERROR: Failed to " 
+								+ "connect to server!");
 								toAdd = "ERROR: Failed to connect"
 								+ " to server!\n";
 							}
 							
 						}
-						else if (firstToken.equals("retr")){
-							System.out.println("  DEBUG: Inside retr function.");
+						else if (firstToken.equals("retr")) {
+							
+							/* For debugging */
+							// System.out.println("  DEBUG: Inside retr function.");
 							
 							try {
-							
 								String fileName = cmdTokens.nextToken();
-								
-			/*************************************************************/	
 		                        
-		                        /* This socket is the "Welcome socket" for the data-link */
-                                ServerSocket dataListen; 
-		                        /* This socket handles data-links with the server */
+		                        /** The "Welcome socket" for the data-link */
+                                ServerSocket dataListen;
+                                
+		                        /* This socket handles data-links with 
+		                        the server */
                                 Socket dataConnection = null;
+                                
                                 /* This value handles the file transfer */
                                 int recvMsgSize;
+                                
 		                        /* For sending and retrieving file */
                                 byte[] byteBuffer = new byte[32768];
 		                        
+		                        /** The port number to send files across */
 		                        int dataPort = 1240;
 		                        
 								try {
                                     /* Send the request over the control line */
                                     String toSend = "RETR" + " " + dataPort + " " + fileName;       
-                                        
-                                    System.out.println("  DEBUG: A");
-                                    System.out.println("  DEBUG: Dataport: " + dataPort + " Filename: " + fileName);
                                     
                                         
                                     outToHost.println(toSend);
                                     outToHost.flush();
                                     
-                                    System.out.println("  DEBUG: B");
-                                    
                                     /* Connect to server and establish variables */
                                     dataListen = new ServerSocket(dataPort);
-                                    
-                                    System.out.println("  DEBUG: C");
+
                                     
                                     dataConnection = dataListen.accept();
                                     InputStream inFromServer_Data = 
                                         dataConnection.getInputStream();   
-
-
-                                    System.out.println("  DEBUG: D");                               
+                             
                                     
                                     
                                     /* Below this handles sending the file itself */
@@ -568,15 +596,13 @@ public class GUI {
                                                   "File does not exist.");
                                                 fileRequested.delete();
                                             } else {
-                                                System.out.println("File retrieved!");
+                                                System.out.println("  File retrieved!");
                                             }
                                         } catch (Exception f) {
                                             System.out.println("Error trying to " + 
                                              "retrieve file.");
                                         }
                                     }
-                                    
-                                    System.out.println("  DEBUG: E");
                                     
                                     /* Close the data connection */
                                     try {
@@ -592,10 +618,7 @@ public class GUI {
                                     System.out.println("ERROR: Failure in " + 
                                         "file retrieval.");
                                 }
-                                
-                                System.out.println("  DEBUG: F");
-								
-						/*************************************************/		
+	
 								
 								
 								
@@ -611,7 +634,10 @@ public class GUI {
 							
 						}
 						else if (firstToken.equals("quit")){
-							System.out.println("  DEBUG: Inside quit function.");
+							
+							/* For debugging */
+							// System.out.println("  DEBUG: Inside quit function.");
+							
 							if (isConnectedToOtherHost != false){
 								disconnect();
 								toAdd = "Disconnected from " + ipAddress + ".\n";
@@ -671,6 +697,7 @@ public class GUI {
 	* Connect is intended to set up a connection between host A and host B.
 	**********************************************************************/
 	private void connect(String ipAddress, String portNum){
+	
 		 /* Connect to server's welcome socket */
                 try {
                     controlSocket = new Socket(ipAddress, 
