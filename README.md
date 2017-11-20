@@ -202,6 +202,12 @@ __Server Requirements:__
 - Updated the keyword-search to return multiple files where multiple users have the same files.
 - GUI looks cooler
 
+### November 20, 2017
+
+**Matt**
+- Updated the XML files and the files they send to fit the scope of the project.
+- Minor text fixes. 
+
 **TO DO**
 1. Maaaaaaaybe validate the files from the XML document to actually exist (we had code for this from the last one).
 2. Maaaaaaaybe add more interesting sample-cases-- do this by downloading more images from sites described in "SampleUsers" folder, and then creating appropriate XML files. 
