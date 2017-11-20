@@ -1,0 +1,28 @@
+<All_Files>
+
+    <File id="0001">  
+	<DisplayName>Email To The Team</DisplayName>
+        <FileName>email.txt</FileName>
+        <Keywords>
+            <Key>Text</Key>
+            <Key>Memo</Key>
+            <Key>RETR</Key>
+            <Key>Crash</Key>
+            <Key>Programming</Key>
+       </Keywords>
+   </File>
+
+    <File id="0002">
+        <DisplayName>Update on the Situation</DisplayName>
+        <FileName>update.txt</FileName>
+        <Keywords>
+            <Key>Text</Key>
+            <Key>Memo</Key>
+            <Key>RETR</Key>
+            <Key>Update</Key>
+            <Key>Success</Key>
+            <Key>Programming</Key>
+       </Keywords>
+   </File>
+
+</All_Files>
