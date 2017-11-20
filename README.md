@@ -206,9 +206,18 @@ __Server Requirements:__
 
 **Matt**
 - Updated the XML files and the files they send to fit the scope of the project.
-- Minor text fixes. 
+- Minor text fixes.
 
-**TO DO**
-1. Maaaaaaaybe validate the files from the XML document to actually exist (we had code for this from the last one).
-2. Maaaaaaaybe add more interesting sample-cases-- do this by downloading more images from sites described in "SampleUsers" folder, and then creating appropriate XML files. 
-3. Maaaaaaaybe have the GUI understand the "ENTER" key to search and to connect.
+**Brendon**
+- Some updates to comments (not fully javadoc'ed).
+- Commented out lots of "DEBUG" statements for the presentation's sake.
+- Note: I did not add the check for XML-validation on server-side (we could, but I'm time limited).
+- Changed some quick displays
+
+**Extra-TO-DO** - In future updates.
+1. Validate the files from the XML document to actually exist (we had code for this from the last one).
+2. Add more interesting sample-cases-- do this by downloading more images from sites described in "SampleUsers" folder, and then creating appropriate XML files. 
+3. Have the GUI understand the "ENTER" key to search and to connect.
+4. Add the capacity to send images and PDFs.
+5. Have the GUI display error messages.
+6. Have the terminal messages of debugging and errors print to a log.txt.
