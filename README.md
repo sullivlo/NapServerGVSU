@@ -1,7 +1,5 @@
 # NapServerGVSU
 
-"The floor is Java!"
-
 ## Abstract
 
 This system implements a "Central Server" that connects multiple peers to share files among one another. It serves to list the available files to the connected users as well as to handle the file transfer with the peer that has the desired file.
